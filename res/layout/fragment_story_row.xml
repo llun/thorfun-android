@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/story_row_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/story_row_background"
+    android:padding="6dp" >
+
+    <ImageView
+        android:id="@+id/story_row_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="6dp"
+        android:contentDescription="@string/story_row_image" />
+
+    <RelativeLayout
+        android:id="@+id/story_row_icon_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/story_row_icon"
+        android:layout_alignLeft="@id/story_row_icon"
+        android:layout_alignRight="@id/story_row_icon"
+        android:layout_alignTop="@id/story_row_icon" >
+
+        <ProgressBar
+            android:id="@+id/story_row_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/story_row_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_toRightOf="@id/story_row_icon"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/loading"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/story_row_description"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@id/story_row_icon"
+        android:layout_below="@id/story_row_title"
+        android:layout_toRightOf="@id/story_row_icon"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="@string/loading"
+        android:textSize="12sp" />
+
+</RelativeLayout>
