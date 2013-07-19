@@ -1,0 +1,29 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="Theme.Light.Thorfun" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/Widget.Thorfun.ActionBar</item>
+    </style>
+
+    <style name="Widget.Thorfun.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:titleTextStyle">@style/TextAppearance.Thorfun.Widget.ActionBar.Title</item>
+        <item name="android:displayOptions">showHome|showTitle</item>
+        <item name="android:background">@drawable/actionbar_background</item>
+    </style>
+
+    <style name="TextAppearance.Thorfun.Widget.ActionBar.Title" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:inputType">textCapCharacters</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">20dp</item>
+    </style>
+
+</resources>
