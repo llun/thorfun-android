@@ -1,17 +1,19 @@
 package th.in.llun.thorfun;
 
 import th.in.llun.thorfun.api.RemoteCollection;
-import th.in.llun.thorfun.api.Story;
+import th.in.llun.thorfun.api.CategoryStory;
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.ThorfunResult;
 import th.in.llun.thorfun.utils.ImageLoader;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -28,7 +30,8 @@ public class StoryFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
 		thorfun = Thorfun.getInstance();
-		adapter = new StoryAdapter(getLayoutInflater(savedInstanceState));
+		adapter = new StoryAdapter(getActivity(),
+		    getLayoutInflater(savedInstanceState));
 
 		View rootView = inflater.inflate(R.layout.fragment_story, container, false);
 		GridView grid = (GridView) rootView.findViewById(R.id.story_grid);
@@ -43,11 +46,11 @@ public class StoryFragment extends Fragment {
 
 		final Activity activity = getActivity();
 		Log.d(Thorfun.LOG_TAG, "Load story");
-		thorfun.loadStory(new ThorfunResult<RemoteCollection<Story>>() {
+		thorfun.loadStory(new ThorfunResult<RemoteCollection<CategoryStory>>() {
 
 			@Override
-			public void onResponse(RemoteCollection<Story> response) {
-				final Story[] stories = response.collection();
+			public void onResponse(RemoteCollection<CategoryStory> response) {
+				final CategoryStory[] stories = response.collection();
 				activity.runOnUiThread(new Runnable() {
 
 					@Override
@@ -63,14 +66,16 @@ public class StoryFragment extends Fragment {
 
 	private static class StoryAdapter extends BaseAdapter {
 
-		private Story[] stories = new Story[0];
+		private CategoryStory[] stories = new CategoryStory[0];
 		private LayoutInflater inflater = null;
+		private Activity activity = null;
 
-		public StoryAdapter(LayoutInflater inflater) {
+		public StoryAdapter(Activity activity, LayoutInflater inflater) {
+			this.activity = activity;
 			this.inflater = inflater;
 		}
 
-		public void setStories(Story[] stories) {
+		public void setStories(CategoryStory[] stories) {
 			this.stories = stories;
 			this.notifyDataSetChanged();
 		}
@@ -94,7 +99,7 @@ public class StoryFragment extends Fragment {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView, final ViewGroup parent) {
 			if (position == 0 || position == getCount() - 1) {
 				View view = convertView;
 				if (view == null) {
@@ -110,7 +115,7 @@ public class StoryFragment extends Fragment {
 				    parent, false);
 			}
 
-			Story story = stories[position - 1];
+			CategoryStory story = stories[position - 1];
 
 			ImageView icon = (ImageView) row.findViewById(R.id.story_row_icon);
 			ViewGroup loading = (ViewGroup) row
@@ -124,6 +129,20 @@ public class StoryFragment extends Fragment {
 
 			title.setText(Html.fromHtml(story.getTitle()));
 			description.setText(Html.fromHtml(story.getDescription()));
+			row.setTag(position - 1);
+
+			row.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					int position = (Integer) view.getTag();
+					CategoryStory story = stories[position];
+
+					Intent intent = new Intent(activity, StoryView.class);
+					intent.putExtra(StoryView.KEY_STORY, story.rawString());
+					activity.startActivity(intent);
+				}
+			});
 
 			return row;
 		}

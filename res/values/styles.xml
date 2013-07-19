@@ -26,4 +26,9 @@
         <item name="android:paddingLeft">20dp</item>
     </style>
 
+    <style name="Widget.Thorfun.ProgressBar.Horizontal" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
+        <item name="android:minHeight">5dip</item>
+        <item name="android:maxHeight">5dip</item>
+    </style>
+
 </resources>

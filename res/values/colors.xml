@@ -6,5 +6,6 @@
     <color name="thorfun.pagertitle_text_color">#2e5e8a</color>
     <color name="thorfun.story_row_background">#ffffff</color>
     <color name="thorfun.story_row_border">#d9e1e5</color>
+    <color name="thorfun.webview.background">#e8f0f5</color>
 
 </resources>

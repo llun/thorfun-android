@@ -13,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -42,38 +43,51 @@ public class Thorfun {
 		return false;
 	}
 
-	public void loadStory(final ThorfunResult<RemoteCollection<Story>> result) {
+	public void getStory(String id, final ThorfunResult<Story> result) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("id", id);
+
+		invoke("http://thorfun.com/ajax/story", map, new BaseRemoteResult() {
+
+			public void onResponse(JSONObject response) {
+				result.onResponse(new Story(response));
+			}
+
+		});
+	}
+
+	public void loadStory(
+	    final ThorfunResult<RemoteCollection<CategoryStory>> result) {
 
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("category_id", Story.CATEGORY_ALL);
+		map.put("category_id", CategoryStory.CATEGORY_ALL);
 		map.put("following", "false");
 		map.put("popular", "false");
 		map.put("editor_pick", "false");
 		map.put("sort", "hot");
 		map.put("limit", "15");
-		invoke("story", map, new BaseRemoteResult() {
+		invoke("http://thorfun.com/ajax/home/story", map, new BaseRemoteResult() {
 
 			public void onResponse(JSONArray responses) {
 
-				ArrayList<Story> stories = new ArrayList<Story>(responses.length());
+				ArrayList<CategoryStory> stories = new ArrayList<CategoryStory>(
+				    responses.length());
 				for (int index = 0; index < responses.length(); index++) {
 					JSONObject object = responses.optJSONObject(index);
-					stories.add(new Story(object));
+					stories.add(new CategoryStory(object));
 				}
 
-				result.onResponse(new RemoteCollection<Story>(stories
-				    .toArray(new Story[responses.length()])));
+				result.onResponse(new RemoteCollection<CategoryStory>(stories
+				    .toArray(new CategoryStory[responses.length()])));
 			}
 
 		});
 
 	}
 
-	public void invoke(final String action, Map<String, String> parameters,
+	public void invoke(final String url, Map<String, String> parameters,
 	    final RemoteResult result) {
-		final StringBuilder builder = new StringBuilder(
-		    "http://thorfun.com/ajax/home/");
-		builder.append(action);
+		final StringBuilder builder = new StringBuilder(url);
 
 		if (parameters.size() > 0) {
 			builder.append("?");
@@ -96,8 +110,14 @@ public class Thorfun {
 					entity.writeTo(baos);
 					String output = baos.toString();
 					Log.v(LOG_TAG, output);
-					JSONArray json = new JSONArray(output);
-					result.onResponse(json);
+					try {
+						JSONObject json = new JSONObject(output);
+						result.onResponse(json);
+					} catch (JSONException je) {
+						JSONArray json = new JSONArray(output);
+						result.onResponse(json);
+					}
+
 				} catch (Exception e) {
 					Log.e(LOG_TAG, e.getMessage(), e);
 				}
