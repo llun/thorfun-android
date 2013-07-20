@@ -11,9 +11,11 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 public class StoryView extends Activity {
 
@@ -24,7 +26,7 @@ public class StoryView extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_story);
+		setContentView(R.layout.activity_story_view);
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -37,6 +39,9 @@ public class StoryView extends Activity {
 		} catch (JSONException e) {
 			Log.e(Thorfun.LOG_TAG, "Can't parse JSON string", e);
 		}
+
+		TextView titleView = (TextView) findViewById(R.id.story_view_title);
+		titleView.setText(Html.fromHtml(story.getTitle()));
 
 		final WebView webView = (WebView) findViewById(R.id.story_view_webcontent);
 

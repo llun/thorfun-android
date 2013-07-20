@@ -3,9 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <TextView
+        android:id="@+id/story_view_title"
+        style="@style/Widget.Thorfun.Story.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <WebView
         android:id="@+id/story_view_webcontent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/story_view_title" />
 
 </RelativeLayout>
