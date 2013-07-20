@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="thorfun.loading_background">#ffffff</color>
     <color name="thorfun.actionbar_background">#75c0ef</color>
     <color name="thorfun.pagertitle_background">#e8f0f5</color>
     <color name="thorfun.pagertitle_text_color">#2e5e8a</color>

@@ -80,7 +80,7 @@ public class MainView extends FragmentActivity {
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 1;
 		}
 
 		@Override
@@ -89,8 +89,6 @@ public class MainView extends FragmentActivity {
 			switch (position) {
 			case 0:
 				return getString(R.string.story_title).toUpperCase(l);
-			case 1:
-				return getString(R.string.board_title).toUpperCase(l);
 			}
 			return null;
 		}

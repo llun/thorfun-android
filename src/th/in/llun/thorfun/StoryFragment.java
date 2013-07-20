@@ -1,7 +1,7 @@
 package th.in.llun.thorfun;
 
-import th.in.llun.thorfun.api.RemoteCollection;
 import th.in.llun.thorfun.api.CategoryStory;
+import th.in.llun.thorfun.api.RemoteCollection;
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.ThorfunResult;
 import th.in.llun.thorfun.utils.ImageLoader;
@@ -45,6 +45,9 @@ public class StoryFragment extends Fragment {
 		super.onStart();
 
 		final Activity activity = getActivity();
+		final RelativeLayout layout = (RelativeLayout) activity
+		    .findViewById(R.id.story_loading);
+
 		Log.d(Thorfun.LOG_TAG, "Load story");
 		thorfun.loadStory(new ThorfunResult<RemoteCollection<CategoryStory>>() {
 
@@ -55,6 +58,7 @@ public class StoryFragment extends Fragment {
 
 					@Override
 					public void run() {
+						layout.setVisibility(View.GONE);
 						adapter.setStories(stories);
 					}
 				});
