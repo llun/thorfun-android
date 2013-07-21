@@ -57,7 +57,7 @@ public class CategoryStory extends JSONRemoteObject {
 
 	public Date getTime() {
 		JSONObject time = raw.optJSONObject("time");
-		return new Date(time.optLong("sec"));
+		return new Date(time.optLong("sec") * 1000);
 	}
 
 	public Neighbour getNeightbour() {

@@ -2,6 +2,7 @@ package th.in.llun.thorfun;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ocpsoft.prettytime.PrettyTime;
 
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
@@ -41,7 +42,14 @@ public class StoryView extends Activity {
 		}
 
 		TextView titleView = (TextView) findViewById(R.id.story_view_title);
+		TextView username = (TextView) findViewById(R.id.story_view_username_text);
+		TextView like = (TextView) findViewById(R.id.story_view_favorite_text);
+		TextView time = (TextView) findViewById(R.id.story_view_time_text);
+
 		titleView.setText(Html.fromHtml(story.getTitle()));
+		username.setText(story.getNeightbour().getName());
+		like.setText("" + story.getLikeNumber());
+		time.setText(new PrettyTime().format(story.getTime()));
 
 		final WebView webView = (WebView) findViewById(R.id.story_view_webcontent);
 		Thorfun.getInstance().getStory(story.getID(), new ThorfunResult<Story>() {

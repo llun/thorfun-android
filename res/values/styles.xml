@@ -37,7 +37,6 @@
         <item name="android:text">@string/loading</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:background">@color/thorfun.story_view_title_background</item>
         <item name="android:textColor">@color/thorfun.story_view_title_text_color</item>
     </style>
 
