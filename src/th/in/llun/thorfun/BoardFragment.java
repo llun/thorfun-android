@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
-import th.in.llun.thorfun.api.Post;
-import th.in.llun.thorfun.api.RemoteCollection;
 import th.in.llun.thorfun.api.Thorfun;
-import th.in.llun.thorfun.api.ThorfunResult;
+import th.in.llun.thorfun.api.model.Post;
+import th.in.llun.thorfun.api.model.RemoteCollection;
+import th.in.llun.thorfun.api.model.ThorfunResult;
 import th.in.llun.thorfun.utils.ImageLoader;
 import android.app.Activity;
 import android.os.Bundle;

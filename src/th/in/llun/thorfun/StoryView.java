@@ -3,10 +3,10 @@ package th.in.llun.thorfun;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import th.in.llun.thorfun.api.CategoryStory;
-import th.in.llun.thorfun.api.Story;
 import th.in.llun.thorfun.api.Thorfun;
-import th.in.llun.thorfun.api.ThorfunResult;
+import th.in.llun.thorfun.api.model.CategoryStory;
+import th.in.llun.thorfun.api.model.Story;
+import th.in.llun.thorfun.api.model.ThorfunResult;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;

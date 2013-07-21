@@ -1,4 +1,4 @@
-package th.in.llun.thorfun.api;
+package th.in.llun.thorfun.api.model;
 
 import java.util.List;
 

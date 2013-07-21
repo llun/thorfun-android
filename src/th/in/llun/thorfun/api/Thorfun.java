@@ -16,6 +16,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import th.in.llun.thorfun.api.model.CategoryStory;
+import th.in.llun.thorfun.api.model.Post;
+import th.in.llun.thorfun.api.model.RemoteCollection;
+import th.in.llun.thorfun.api.model.Story;
+import th.in.llun.thorfun.api.model.ThorfunResult;
+
 import android.util.Log;
 
 public class Thorfun {

@@ -1,8 +1,10 @@
-package th.in.llun.thorfun.api;
+package th.in.llun.thorfun.api.model;
 
 import java.util.Date;
 
 import org.json.JSONObject;
+
+import th.in.llun.thorfun.api.Thorfun;
 
 import android.util.Log;
 

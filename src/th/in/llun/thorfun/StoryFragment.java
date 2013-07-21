@@ -3,10 +3,10 @@ package th.in.llun.thorfun;
 import java.util.ArrayList;
 import java.util.List;
 
-import th.in.llun.thorfun.api.CategoryStory;
-import th.in.llun.thorfun.api.RemoteCollection;
 import th.in.llun.thorfun.api.Thorfun;
-import th.in.llun.thorfun.api.ThorfunResult;
+import th.in.llun.thorfun.api.model.CategoryStory;
+import th.in.llun.thorfun.api.model.RemoteCollection;
+import th.in.llun.thorfun.api.model.ThorfunResult;
 import th.in.llun.thorfun.utils.ImageLoader;
 import android.app.Activity;
 import android.content.Intent;
