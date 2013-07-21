@@ -74,11 +74,12 @@ public class StoryFragment extends Fragment {
 
 	private static class StoryAdapter extends BaseAdapter {
 
-		private List<CategoryStory> stories = new ArrayList<CategoryStory>(0);
+		final private List<CategoryStory> stories = new ArrayList<CategoryStory>(0);
 		private LayoutInflater inflater = null;
 		private Activity activity = null;
 
 		private boolean isLoading = false;
+		private boolean isLastPage = false;
 
 		public StoryAdapter(Activity activity, LayoutInflater inflater) {
 			this.activity = activity;
@@ -86,7 +87,8 @@ public class StoryFragment extends Fragment {
 		}
 
 		public void setStories(List<CategoryStory> stories) {
-			this.stories = stories;
+			this.stories.clear();
+			this.stories.addAll(stories);
 			this.notifyDataSetChanged();
 		}
 
@@ -125,16 +127,44 @@ public class StoryFragment extends Fragment {
 					    R.layout.fragment_loading_row, parent, false);
 				}
 
-				if (!isLoading) {
+				final BaseAdapter self = this;
+
+				if (!isLoading && !isLastPage) {
+					isLoading = true;
 					CategoryStory story = stories.get(stories.size() - 1);
-					Log.d(Thorfun.LOG_TAG, story.getID());
+					Thorfun.getInstance().loadStory(story,
+					    new ThorfunResult<RemoteCollection<CategoryStory>>() {
+
+						    @Override
+						    public void onResponse(RemoteCollection<CategoryStory> response) {
+							    isLoading = false;
+
+							    List<CategoryStory> next = response.collection();
+							    if (next.size() > 0) {
+								    stories.addAll(next);
+								    activity.runOnUiThread(new Runnable() {
+
+									    @Override
+									    public void run() {
+										    self.notifyDataSetChanged();
+									    }
+								    });
+							    } else {
+								    isLastPage = true;
+							    }
+
+						    };
+					    });
+				}
+
+				if (isLastPage) {
+					row.setVisibility(View.GONE);
 				}
 
 				return row;
 			}
 			// Normal row
 			else {
-				Log.d(Thorfun.LOG_TAG, "Position: " + position);
 				RelativeLayout row = (RelativeLayout) convertView;
 				if (row == null) {
 					row = (RelativeLayout) inflater.inflate(R.layout.fragment_story_row,

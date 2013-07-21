@@ -56,7 +56,7 @@ public class Thorfun {
 		});
 	}
 
-	public void loadStory(String previous,
+	public void loadStory(CategoryStory last,
 	    final ThorfunResult<RemoteCollection<CategoryStory>> result) {
 
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -66,8 +66,9 @@ public class Thorfun {
 		map.put("editor_pick", "false");
 		map.put("sort", "hot");
 		map.put("limit", "15");
-		if (previous != null) {
-			map.put("skipId", previous);
+		if (last != null) {
+			map.put("skipId", last.getID());
+			map.put("skipView", String.format("%d", last.getViewNumber()));
 		}
 		invoke("http://thorfun.com/ajax/home/story", map, new BaseRemoteResult() {
 

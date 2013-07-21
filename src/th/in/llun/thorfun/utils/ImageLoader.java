@@ -2,12 +2,14 @@ package th.in.llun.thorfun.utils;
 
 import java.net.URL;
 
+import th.in.llun.thorfun.api.Thorfun;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -51,6 +53,7 @@ public class ImageLoader extends AsyncTask<String, Void, Bitmap> {
 				return out;
 			}
 		} catch (Exception e) {
+			Log.d(Thorfun.LOG_TAG, "Something wrong", e);
 			return null;
 		}
 	}
