@@ -47,6 +47,7 @@
         android:id="@+id/post_row_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_below="@id/post_row_title"
         android:layout_toRightOf="@id/post_row_avatar" >
 

@@ -173,8 +173,13 @@ public class BoardFragment extends Fragment {
 				TextView title = (TextView) row.findViewById(R.id.post_row_title);
 				title.setText(Html.fromHtml(post.getTitle()));
 
-				TextView user = (TextView) row.findViewById(R.id.post_row_profile_name);
-				user.setText("By: " + post.getNeightbour().getName());
+				TextView username = (TextView) row
+				    .findViewById(R.id.post_row_profile_name);
+				String usernameTemplate = activity
+				    .getString(R.string.board_post_username);
+				String name = usernameTemplate.replace("{name}", post.getNeightbour()
+				    .getName());
+				username.setText(name);
 
 				return row;
 			}
