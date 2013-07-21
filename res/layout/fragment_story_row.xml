@@ -11,7 +11,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
         android:layout_marginRight="6dp"
         android:contentDescription="@string/story_row_image" />
 
@@ -55,5 +55,46 @@
         android:maxLines="3"
         android:text="@string/loading"
         android:textSize="12sp" />
+
+    <RelativeLayout
+        android:id="@+id/story_row_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/story_row_description"
+        android:layout_toRightOf="@id/story_row_icon" >
+
+        <TextView
+            android:id="@+id/story_row_username_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_social_person"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/loading"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/story_row_favorite_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/story_row_username_text"
+            android:drawableLeft="@drawable/ic_rating_favorite"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/loading"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/story_row_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/story_row_favorite_text"
+            android:layout_toRightOf="@id/story_row_favorite_text"
+            android:drawableLeft="@drawable/ic_device_access_time"
+            android:gravity="center"
+            android:text="@string/loading"
+            android:textSize="10sp" />
+    </RelativeLayout>
 
 </RelativeLayout>

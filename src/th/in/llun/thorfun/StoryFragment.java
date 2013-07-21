@@ -3,6 +3,8 @@ package th.in.llun.thorfun;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
 import th.in.llun.thorfun.api.model.RemoteCollection;
@@ -182,9 +184,17 @@ public class StoryFragment extends Fragment {
 				TextView title = (TextView) row.findViewById(R.id.story_row_title);
 				TextView description = (TextView) row
 				    .findViewById(R.id.story_row_description);
+				TextView username = (TextView) row
+				    .findViewById(R.id.story_row_username_text);
+				TextView like = (TextView) row
+				    .findViewById(R.id.story_row_favorite_text);
+				TextView time = (TextView) row.findViewById(R.id.story_row_time_text);
 
 				title.setText(Html.fromHtml(story.getTitle()));
 				description.setText(Html.fromHtml(story.getDescription()));
+				username.setText(story.getNeightbour().getName());
+				like.setText(story.getLikeNumber() + "");
+				time.setText(new PrettyTime().format(story.getTime()));
 				row.setTag(position - 1);
 
 				row.setOnClickListener(new OnClickListener() {

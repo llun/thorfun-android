@@ -51,6 +51,10 @@ public class CategoryStory extends JSONRemoteObject {
 		return raw.optInt("view_num");
 	}
 
+	public int getLikeNumber() {
+		return raw.optInt("like_num");
+	}
+
 	public Date getTime() {
 		JSONObject time = raw.optJSONObject("time");
 		return new Date(time.optLong("sec"));
