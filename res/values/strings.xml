@@ -7,6 +7,7 @@
     <string name="story_title">Story</string>
     <string name="story_row_image">Story Image</string>
     <string name="board_title">Board</string>
+    <string name="board_post_avatar">User Avatar Image</string>
     <string name="browser_back">Back</string>
     <string name="browser_forward">Forward</string>
     <string name="browser_share">Share</string>

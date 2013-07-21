@@ -2,6 +2,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
+    <GridView
+        android:id="@+id/post_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="1"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:verticalSpacing="6dp" >
+    </GridView>
+
+    <RelativeLayout
+        android:id="@+id/post_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/thorfun.loading_background" >
+
+        <ProgressBar
+            android:id="@+id/post_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            style="@style/Widget.Thorfun.Loading.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/post_progress"
+            android:layout_centerHorizontal="true"
+            android:text="@string/loading" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/story_row_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/story_row_background"
+    android:padding="6dp" >
+
+    <ImageView
+        android:id="@+id/post_row_avatar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="6dp"
+        android:contentDescription="@string/board_post_avatar" />
+
+    <RelativeLayout
+        android:id="@+id/post_row_loading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignBottom="@id/post_row_avatar"
+        android:layout_alignLeft="@id/post_row_avatar"
+        android:layout_alignRight="@id/post_row_avatar"
+        android:layout_alignTop="@id/post_row_avatar"
+        android:background="@color/thorfun.loading_background" >
+
+        <ProgressBar
+            android:id="@+id/post_row_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/post_row_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/post_row_avatar"
+        android:layout_toRightOf="@id/post_row_avatar"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="@string/loading"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/post_row_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/post_row_title"
+        android:layout_toRightOf="@id/post_row_avatar" >
+
+        <TextView
+            android:id="@+id/post_row_profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loading"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+</RelativeLayout>
