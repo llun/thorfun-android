@@ -6,6 +6,7 @@
     -->
     <style name="Theme.Light.Thorfun" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/Widget.Thorfun.ActionBar</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
     </style>
 
     <style name="Widget.Thorfun.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">

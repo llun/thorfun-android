@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Thorfun Reader</string>
+    <string name="app_name">Thorfun</string>
     <string name="loading">Loading</string>
+    <string name="main_menu_login">Login</string>
     <string name="story_title">Story</string>
     <string name="story_row_image">Story Image</string>
     <string name="board_title">Board</string>
