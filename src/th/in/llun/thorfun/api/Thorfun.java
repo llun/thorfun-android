@@ -88,6 +88,30 @@ public class Thorfun {
 
 	}
 
+	public void loadBoard(final ThorfunResult<RemoteCollection<Post>> result) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("category_id", "all");
+		map.put("following", "false");
+		map.put("sort", "time");
+		map.put("limit", "20");
+
+		invoke("http://thorfun.com/ajax/home/board", map, new BaseRemoteResult() {
+
+			public void onResponse(JSONArray responses) {
+
+				ArrayList<Post> posts = new ArrayList<Post>(responses.length());
+				for (int index = 0; index < responses.length(); index++) {
+					JSONObject object = responses.optJSONObject(index);
+					posts.add(new Post(object));
+				}
+
+				result.onResponse(new RemoteCollection<Post>(posts));
+
+			}
+
+		});
+	}
+
 	public void invoke(final String url, Map<String, String> parameters,
 	    final RemoteResult result) {
 		final StringBuilder builder = new StringBuilder(url);
