@@ -14,9 +14,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebSettings.LayoutAlgorithm;
 import android.widget.TextView;
 
 public class StoryView extends Activity {
@@ -46,9 +44,6 @@ public class StoryView extends Activity {
 		titleView.setText(Html.fromHtml(story.getTitle()));
 
 		final WebView webView = (WebView) findViewById(R.id.story_view_webcontent);
-		WebSettings webSettings = webView.getSettings();
-		webSettings.setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);
-
 		Thorfun.getInstance().getStory(story.getID(), new ThorfunResult<Story>() {
 
 			@Override
