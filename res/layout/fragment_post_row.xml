@@ -11,7 +11,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
         android:layout_marginRight="6dp"
         android:contentDescription="@string/board_post_avatar" />
 
@@ -52,12 +52,36 @@
         android:layout_toRightOf="@id/post_row_avatar" >
 
         <TextView
-            android:id="@+id/post_row_profile_name"
+            android:id="@+id/post_row_username_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_social_person"
+            android:gravity="center"
             android:singleLine="true"
             android:text="@string/loading"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/post_row_comment_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/post_row_username_text"
+            android:drawableLeft="@drawable/ic_social_chat"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/loading"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/post_row_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/post_row_comment_text"
+            android:layout_toRightOf="@id/post_row_comment_text"
+            android:drawableLeft="@drawable/ic_device_access_time"
+            android:gravity="center"
+            android:text="@string/loading"
+            android:textSize="10sp" />
     </RelativeLayout>
 
 </RelativeLayout>

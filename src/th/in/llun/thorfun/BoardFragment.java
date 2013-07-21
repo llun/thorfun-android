@@ -3,6 +3,8 @@ package th.in.llun.thorfun;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import th.in.llun.thorfun.api.Post;
 import th.in.llun.thorfun.api.RemoteCollection;
 import th.in.llun.thorfun.api.Thorfun;
@@ -12,6 +14,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,12 +177,21 @@ public class BoardFragment extends Fragment {
 				title.setText(Html.fromHtml(post.getTitle()));
 
 				TextView username = (TextView) row
-				    .findViewById(R.id.post_row_profile_name);
-				String usernameTemplate = activity
-				    .getString(R.string.board_post_username);
-				String name = usernameTemplate.replace("{name}", post.getNeightbour()
-				    .getName());
-				username.setText(name);
+				    .findViewById(R.id.post_row_username_text);
+				username.setText(post.getNeightbour().getName());
+
+				TextView comment = (TextView) row
+				    .findViewById(R.id.post_row_comment_text);
+				String commentTemplate = activity
+				    .getString(R.string.board_post_comment);
+				comment.setText(commentTemplate.replace("{number}",
+				    String.format("%s", post.getTotalComment())));
+
+				PrettyTime prettyTime = new PrettyTime();
+				TextView time = (TextView) row.findViewById(R.id.post_row_time_text);
+				Log.d(Thorfun.LOG_TAG, "Time: " + post.getTime());
+				Log.d(Thorfun.LOG_TAG, "Time: " + prettyTime.format(post.getTime()));
+				time.setText(prettyTime.format(post.getTime()));
 
 				return row;
 			}
