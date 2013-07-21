@@ -1,14 +1,16 @@
 package th.in.llun.thorfun.api;
 
+import java.util.List;
+
 public class RemoteCollection<E extends RemoteObject> implements RemoteObject {
 
-	protected E[] raws;
+	protected List<E> raws;
 
-	public RemoteCollection(E[] raws) {
+	public RemoteCollection(List<E> raws) {
 		this.raws = raws;
 	}
-	
-	public E[] collection() {
+
+	public List<E> collection() {
 		return this.raws;
 	}
 

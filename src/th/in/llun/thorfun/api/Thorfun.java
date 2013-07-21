@@ -56,7 +56,7 @@ public class Thorfun {
 		});
 	}
 
-	public void loadStory(
+	public void loadStory(String previous,
 	    final ThorfunResult<RemoteCollection<CategoryStory>> result) {
 
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -66,6 +66,9 @@ public class Thorfun {
 		map.put("editor_pick", "false");
 		map.put("sort", "hot");
 		map.put("limit", "15");
+		if (previous != null) {
+			map.put("skipId", previous);
+		}
 		invoke("http://thorfun.com/ajax/home/story", map, new BaseRemoteResult() {
 
 			public void onResponse(JSONArray responses) {
@@ -77,8 +80,7 @@ public class Thorfun {
 					stories.add(new CategoryStory(object));
 				}
 
-				result.onResponse(new RemoteCollection<CategoryStory>(stories
-				    .toArray(new CategoryStory[responses.length()])));
+				result.onResponse(new RemoteCollection<CategoryStory>(stories));
 			}
 
 		});
