@@ -179,7 +179,7 @@ public class StoryFragment extends Fragment {
 		}
 
 		public int getItemViewType(int position) {
-			if (position == 0 || position == getCount() - 1) {
+			if (position == 0) {
 				return 0;
 			} else if (position == getCount() - 1) {
 				return 1;
