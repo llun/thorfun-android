@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/login_username_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:ems="10"
+        android:hint="@string/login_username_hint" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/login_password_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_username_field"
+        android:layout_margin="10dp"
+        android:ems="10"
+        android:hint="@string/login_password_hint"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/login_submit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/login_password_field"
+        android:layout_below="@+id/login_password_field"
+        android:text="@string/login_submit_button" />
+
+    <Button
+        android:id="@+id/login_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/login_submit_button"
+        android:layout_toRightOf="@+id/login_submit_button"
+        android:text="@string/login_cancel_button" />
+
+</RelativeLayout>

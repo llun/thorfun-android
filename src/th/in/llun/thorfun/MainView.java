@@ -10,10 +10,18 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class MainView extends FragmentActivity {
 
-	SectionsPagerAdapter mSectionsPagerAdapter;
+	public static final String PAGE_MAIN = "main";
+	public static final String PAGE_LOGIN = "login";
+
+	private String page;
+	private SectionsPagerAdapter mSectionsPagerAdapter;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -23,30 +31,67 @@ public class MainView extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main_view);
 
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 		    getSupportFragmentManager());
 
-		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-
+		showMain();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_main_menu, menu);
-		return true;
+		if (page == PAGE_MAIN) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.activity_main_menu, menu);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one
-	 * of the sections/tabs/pages.
-	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.main_menu_login:
+			showLogin();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	public void showLogin() {
+		setContentView(R.layout.activity_main_view_login);
+
+		page = PAGE_LOGIN;
+		invalidateOptionsMenu();
+		Button cancelButton = (Button) findViewById(R.id.login_cancel_button);
+		cancelButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				showMain();
+			}
+		});
+	}
+
+	public void showMain() {
+		setContentView(R.layout.activity_main_view);
+
+		page = PAGE_MAIN;
+		invalidateOptionsMenu();
+
+		// Set up the ViewPager with the sections adapter.
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+		if (mViewPager.getAdapter() == null) {
+			mViewPager.setAdapter(mSectionsPagerAdapter);
+		}
+
+		mSectionsPagerAdapter.notifyDataSetChanged();
+
+	}
+
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
@@ -72,6 +117,10 @@ public class MainView extends FragmentActivity {
 		@Override
 		public int getCount() {
 			return 2;
+		}
+
+		public int getItemPosition(Object object) {
+			return POSITION_NONE;
 		}
 
 		@Override
