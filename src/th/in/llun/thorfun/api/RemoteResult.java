@@ -7,5 +7,6 @@ public interface RemoteResult {
 
 	void onResponse(JSONObject response) throws Exception;
 	void onResponse(JSONArray response) throws Exception;
+	void onResponse(String response) throws Exception;
 	
 }

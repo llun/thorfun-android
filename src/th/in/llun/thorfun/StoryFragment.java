@@ -34,7 +34,7 @@ public class StoryFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
-		thorfun = Thorfun.getInstance();
+		thorfun = Thorfun.getInstance(getActivity());
 		adapter = new StoryAdapter(getActivity(),
 		    getLayoutInflater(savedInstanceState));
 
@@ -134,7 +134,7 @@ public class StoryFragment extends Fragment {
 				if (!isLoading && !isLastPage) {
 					isLoading = true;
 					CategoryStory story = stories.get(stories.size() - 1);
-					Thorfun.getInstance().loadStory(story,
+					Thorfun.getInstance(activity).loadStory(story,
 					    new ThorfunResult<RemoteCollection<CategoryStory>>() {
 
 						    @Override

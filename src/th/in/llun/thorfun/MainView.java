@@ -2,6 +2,8 @@ package th.in.llun.thorfun;
 
 import java.util.Locale;
 
+import th.in.llun.thorfun.api.Thorfun;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,11 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class MainView extends FragmentActivity {
 
 	public static final String PAGE_MAIN = "main";
 	public static final String PAGE_LOGIN = "login";
+	public static final String PAGE_MAIN_LOGGEDIN = "main_loggedin";
 
 	private String page;
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -44,6 +48,10 @@ public class MainView extends FragmentActivity {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.activity_main_menu, menu);
 			return true;
+		} else if (page == PAGE_MAIN_LOGGEDIN) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.activity_loggedin_menu, menu);
+			return true;
 		} else {
 			return false;
 		}
@@ -56,6 +64,10 @@ public class MainView extends FragmentActivity {
 		case R.id.main_menu_login:
 			showLogin();
 			return true;
+		case R.id.main_menu_logout:
+			Thorfun.getInstance(this).logout();
+			invalidateOptionsMenu();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -66,12 +78,26 @@ public class MainView extends FragmentActivity {
 
 		page = PAGE_LOGIN;
 		invalidateOptionsMenu();
-		Button cancelButton = (Button) findViewById(R.id.login_cancel_button);
-		cancelButton.setOnClickListener(new OnClickListener() {
+
+		final Activity mActivity = this;
+		Button mCancelButton = (Button) findViewById(R.id.login_cancel_button);
+		mCancelButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
 				showMain();
+			}
+		});
+
+		final EditText mUsername = (EditText) findViewById(R.id.login_username_field);
+		final EditText mPassword = (EditText) findViewById(R.id.login_password_field);
+		Button mLoginButton = (Button) findViewById(R.id.login_submit_button);
+		mLoginButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Thorfun.getInstance(mActivity).login(mUsername.getText().toString(),
+				    mPassword.getText().toString());
 			}
 		});
 	}

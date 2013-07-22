@@ -13,4 +13,8 @@ public abstract class BaseRemoteResult implements RemoteResult {
 		throw new Exception("Not support this type of response");
 	}
 
+	public void onResponse(String response) throws Exception {
+		throw new Exception("Not support this type of response");
+	}
+
 }

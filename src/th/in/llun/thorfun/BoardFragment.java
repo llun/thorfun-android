@@ -32,7 +32,7 @@ public class BoardFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
-		thorfun = Thorfun.getInstance();
+		thorfun = Thorfun.getInstance(getActivity());
 		adapter = new BoardAdapter(getActivity(),
 		    getLayoutInflater(savedInstanceState));
 
@@ -126,7 +126,7 @@ public class BoardFragment extends Fragment {
 				if (!isLoading && !isLastPage) {
 					isLoading = true;
 					Post post = posts.get(posts.size() - 1);
-					Thorfun.getInstance().loadBoard(post,
+					Thorfun.getInstance(activity).loadBoard(post,
 					    new ThorfunResult<RemoteCollection<Post>>() {
 
 						    @Override
