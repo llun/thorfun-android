@@ -52,21 +52,26 @@ public class StoryView extends Activity {
 		time.setText(new PrettyTime().format(story.getTime()));
 
 		final WebView webView = (WebView) findViewById(R.id.story_view_webcontent);
-		Thorfun.getInstance(this).getStory(story.getID(), new ThorfunResult<Story>() {
+		Thorfun.getInstance(this).getStory(story.getID(),
+		    new ThorfunResult<Story>() {
 
-			@Override
-			public void onResponse(final Story response) {
-				self.runOnUiThread(new Runnable() {
+			    @Override
+			    public void onResponse(final Story response) {
+				    self.runOnUiThread(new Runnable() {
 
-					@Override
-					public void run() {
-						webView.loadData(response.getStoryData(),
-						    "text/html; charset=UTF-8", null);
-					}
-				});
+					    @Override
+					    public void run() {
+						    StringBuilder content = new StringBuilder(response
+						        .getStoryDescription());
+						    Log.v(Thorfun.LOG_TAG, response.rawString());
 
-			}
-		});
+						    webView.loadData(response.getStoryData(),
+						        "text/html; charset=UTF-8", null);
+					    }
+				    });
+
+			    }
+		    });
 	}
 
 	@Override

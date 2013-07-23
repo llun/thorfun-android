@@ -1,6 +1,7 @@
 package th.in.llun.thorfun.api;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,14 +9,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -217,28 +223,54 @@ public class Thorfun {
 
 	private void invoke(final String url, String method,
 	    Map<String, String> parameters, final RemoteResult result) {
-		final StringBuilder builder = new StringBuilder(url);
 
-		HttpRequest request = null;
-		if (method.equals(METHOD_DELETE)) {
-			request = new HttpDelete(builder.toString());
-		} else {
-			request = new HttpGet(builder.toString());
-		}
-
-		HttpParams params = new BasicHttpParams();
+		ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>(
+		    parameters.size());
 		for (String key : parameters.keySet()) {
-			params.setParameter(key, parameters.get(key));
+			pairs.add(new BasicNameValuePair(key, parameters.get(key)));
 		}
-		request.setParams(params);
+
+		HttpUriRequest request = null;
+		if (method.equals(METHOD_DELETE) || method.equals(METHOD_GET)
+		    || method == null) {
+			final StringBuilder builder = new StringBuilder(url);
+
+			if (parameters.size() > 0) {
+				if (!url.endsWith("?"))
+					builder.append("?");
+				builder.append(URLEncodedUtils.format(pairs, "UTF-8"));
+			}
+
+			if (method.equals(METHOD_DELETE)) {
+				request = new HttpDelete(builder.toString());
+			} else {
+				request = new HttpGet(builder.toString());
+			}
+
+		} else {
+			HttpEntityEnclosingRequestBase entityEnclosing = null;
+			if (method.equals(METHOD_PUT)) {
+				entityEnclosing = new HttpPut(url);
+			} else {
+				entityEnclosing = new HttpPost(url);
+			}
+			
+			try {
+				entityEnclosing.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				Log.e(Thorfun.LOG_TAG, "Can't set entity to request", e);
+			}
+			
+			request = entityEnclosing;
+		}
+		final HttpUriRequest finalRequest = request;
 
 		mExecutor.submit(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					HttpGet get = new HttpGet(builder.toString());
-					HttpResponse response = mClient.execute(get);
+					HttpResponse response = mClient.execute(finalRequest);
 					HttpEntity entity = response.getEntity();
 
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -254,5 +286,4 @@ public class Thorfun {
 		});
 
 	}
-
 }
