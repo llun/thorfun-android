@@ -62,10 +62,15 @@ public class StoryView extends Activity {
 					    @Override
 					    public void run() {
 						    StringBuilder content = new StringBuilder(response
-						        .getStoryDescription());
-						    Log.v(Thorfun.LOG_TAG, response.rawString());
+						        .getStoryDescription().trim());
 
-						    webView.loadData(response.getStoryData(),
+						    if (content.length() > 0) {
+							    content.append("\n<br /><hr /><br />\n");
+						    }
+
+						    content.append(response.getStoryData());
+
+						    webView.loadData(content.toString(),
 						        "text/html; charset=UTF-8", null);
 					    }
 				    });
