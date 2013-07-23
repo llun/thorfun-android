@@ -34,6 +34,7 @@ import th.in.llun.thorfun.api.model.ThorfunResult;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Handler;
 import android.util.Log;
 
 public class Thorfun {
@@ -80,7 +81,8 @@ public class Thorfun {
 		return mToken != null;
 	}
 
-	public void login(String username, String password) {
+	public void login(String username, String password,
+	    final ApiResponse<String> result) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("username", username);
 		map.put("password", password);
@@ -88,7 +90,7 @@ public class Thorfun {
 		invoke("http://thorfun.com/ajax/login", METHOD_GET, map,
 		    new BaseRemoteResult() {
 
-			    public void onResponse(String token) {
+			    public void onResponse(final String token) {
 				    SharedPreferences preference = mContext.getSharedPreferences(
 				        CONFIG_NAME, Context.MODE_PRIVATE);
 				    Editor editor = preference.edit();
@@ -96,6 +98,16 @@ public class Thorfun {
 				    editor.commit();
 
 				    mToken = token;
+
+				    Handler handler = new Handler(mContext.getMainLooper());
+				    handler.post(new Runnable() {
+							
+							@Override
+							public void run() {
+								result.onResponse(token);
+							}
+						});
+				    
 			    }
 
 		    });
@@ -230,6 +242,10 @@ public class Thorfun {
 			pairs.add(new BasicNameValuePair(key, parameters.get(key)));
 		}
 
+		if (mToken != null) {
+			pairs.add(new BasicNameValuePair("token", mToken));
+		}
+
 		HttpUriRequest request = null;
 		if (method.equals(METHOD_DELETE) || method.equals(METHOD_GET)
 		    || method == null) {
@@ -254,13 +270,13 @@ public class Thorfun {
 			} else {
 				entityEnclosing = new HttpPost(url);
 			}
-			
+
 			try {
 				entityEnclosing.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				Log.e(Thorfun.LOG_TAG, "Can't set entity to request", e);
 			}
-			
+
 			request = entityEnclosing;
 		}
 		final HttpUriRequest finalRequest = request;

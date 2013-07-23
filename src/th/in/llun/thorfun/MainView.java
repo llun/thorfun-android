@@ -2,6 +2,7 @@ package th.in.llun.thorfun;
 
 import java.util.Locale;
 
+import th.in.llun.thorfun.api.ApiResponse;
 import th.in.llun.thorfun.api.Thorfun;
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -97,7 +99,19 @@ public class MainView extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				Thorfun.getInstance(mActivity).login(mUsername.getText().toString(),
-				    mPassword.getText().toString());
+				    mPassword.getText().toString(), new ApiResponse<String>() {
+
+					    @Override
+					    public void onResponse(String result) {
+						    showMain();
+					    }
+
+					    @Override
+					    public void onError(Exception exception) {
+						    Log.v(Thorfun.LOG_TAG, exception.getMessage(), exception);
+						    // Show login fail?
+					    }
+				    });
 			}
 		});
 	}
