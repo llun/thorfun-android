@@ -54,14 +54,8 @@ public class BoardFragment extends Fragment {
 
 			@Override
 			public void onResponse(final RemoteCollection<Post> response) {
-				activity.runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						layout.setVisibility(View.GONE);
-						adapter.setPosts(response.collection());
-					}
-				});
+				layout.setVisibility(View.GONE);
+				adapter.setPosts(response.collection());
 			}
 		});
 	}
@@ -136,13 +130,7 @@ public class BoardFragment extends Fragment {
 							    List<Post> next = response.collection();
 							    if (next.size() > 0) {
 								    posts.addAll(next);
-								    activity.runOnUiThread(new Runnable() {
-
-									    @Override
-									    public void run() {
-										    self.notifyDataSetChanged();
-									    }
-								    });
+								    self.notifyDataSetChanged();
 							    } else {
 								    isLastPage = true;
 							    }

@@ -67,15 +67,14 @@ public class MainView extends FragmentActivity {
 			showLogin();
 			return true;
 		case R.id.main_menu_logout:
-			Thorfun.getInstance(this).logout();
-			invalidateOptionsMenu();
+			logout();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	public void showLogin() {
+	private void showLogin() {
 		setContentView(R.layout.activity_main_view_login);
 
 		page = PAGE_LOGIN;
@@ -116,10 +115,15 @@ public class MainView extends FragmentActivity {
 		});
 	}
 
-	public void showMain() {
+	private void showMain() {
 		setContentView(R.layout.activity_main_view);
 
-		page = PAGE_MAIN;
+		if (Thorfun.getInstance(this).isLoggedIn()) {
+			page = PAGE_MAIN_LOGGEDIN;
+		} else {
+			page = PAGE_MAIN;
+		}
+
 		invalidateOptionsMenu();
 
 		// Set up the ViewPager with the sections adapter.
@@ -130,6 +134,21 @@ public class MainView extends FragmentActivity {
 
 		mSectionsPagerAdapter.notifyDataSetChanged();
 
+	}
+	
+	private void logout() {
+		Thorfun.getInstance(this).logout(new ApiResponse<String>() {
+			
+			@Override
+			public void onResponse(String result) {
+				
+			}
+			
+			@Override
+			public void onError(Exception exception) {
+				
+			}
+		});
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {

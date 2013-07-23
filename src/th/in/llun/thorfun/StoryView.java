@@ -32,7 +32,6 @@ public class StoryView extends Activity {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		final Activity self = this;
 		Intent intent = getIntent();
 		String json = intent.getStringExtra(KEY_STORY);
 		try {
@@ -57,23 +56,17 @@ public class StoryView extends Activity {
 
 			    @Override
 			    public void onResponse(final Story response) {
-				    self.runOnUiThread(new Runnable() {
+				    StringBuilder content = new StringBuilder(response
+				        .getStoryDescription().trim());
 
-					    @Override
-					    public void run() {
-						    StringBuilder content = new StringBuilder(response
-						        .getStoryDescription().trim());
+				    if (content.length() > 0) {
+					    content.append("\n<br /><hr /><br />\n");
+				    }
 
-						    if (content.length() > 0) {
-							    content.append("\n<br /><hr /><br />\n");
-						    }
+				    content.append(response.getStoryData());
 
-						    content.append(response.getStoryData());
-
-						    webView.loadData(content.toString(),
-						        "text/html; charset=UTF-8", null);
-					    }
-				    });
+				    webView.loadData(content.toString(), "text/html; charset=UTF-8",
+				        null);
 
 			    }
 		    });

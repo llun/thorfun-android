@@ -98,22 +98,13 @@ public class Thorfun {
 				    editor.commit();
 
 				    mToken = token;
-
-				    Handler handler = new Handler(mContext.getMainLooper());
-				    handler.post(new Runnable() {
-							
-							@Override
-							public void run() {
-								result.onResponse(token);
-							}
-						});
-				    
+				    result.onResponse(token);
 			    }
 
 		    });
 	}
 
-	public void logout() {
+	public void logout(ApiResponse<String> response) {
 
 		if (mToken != null) {
 			HashMap<String, String> map = new HashMap<String, String>();
@@ -123,6 +114,7 @@ public class Thorfun {
 			    new BaseRemoteResult() {
 
 				    public void onResponse(String response) {
+					    Log.v(LOG_TAG, response);
 					    SharedPreferences preference = mContext.getSharedPreferences(
 					        CONFIG_NAME, Context.MODE_PRIVATE);
 					    Editor editor = preference.edit();
@@ -291,9 +283,21 @@ public class Thorfun {
 
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					entity.writeTo(baos);
-					String output = baos.toString();
+					final String output = baos.toString();
 					Log.v(LOG_TAG, output);
-					result.onResponse(output);
+
+					Handler handler = new Handler(mContext.getMainLooper());
+					handler.post(new Runnable() {
+
+						@Override
+						public void run() {
+							try {
+	              result.onResponse(output);
+              } catch (Exception e) {
+              	Log.e(LOG_TAG, e.getMessage(), e);
+              }
+						}
+					});
 
 				} catch (Exception e) {
 					Log.e(LOG_TAG, e.getMessage(), e);
