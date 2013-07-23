@@ -135,18 +135,19 @@ public class MainView extends FragmentActivity {
 		mSectionsPagerAdapter.notifyDataSetChanged();
 
 	}
-	
+
 	private void logout() {
 		Thorfun.getInstance(this).logout(new ApiResponse<String>() {
-			
+
 			@Override
 			public void onResponse(String result) {
-				
+				page = PAGE_MAIN;
+				invalidateOptionsMenu();
 			}
-			
+
 			@Override
 			public void onError(Exception exception) {
-				
+				// Handler error
 			}
 		});
 	}

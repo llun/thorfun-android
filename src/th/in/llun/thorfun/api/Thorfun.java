@@ -104,7 +104,7 @@ public class Thorfun {
 		    });
 	}
 
-	public void logout(ApiResponse<String> response) {
+	public void logout(final ApiResponse<String> result) {
 
 		if (mToken != null) {
 			HashMap<String, String> map = new HashMap<String, String>();
@@ -114,7 +114,6 @@ public class Thorfun {
 			    new BaseRemoteResult() {
 
 				    public void onResponse(String response) {
-					    Log.v(LOG_TAG, response);
 					    SharedPreferences preference = mContext.getSharedPreferences(
 					        CONFIG_NAME, Context.MODE_PRIVATE);
 					    Editor editor = preference.edit();
@@ -122,6 +121,8 @@ public class Thorfun {
 					    editor.commit();
 
 					    mToken = null;
+
+					    result.onResponse(response);
 				    }
 
 			    });
@@ -292,10 +293,10 @@ public class Thorfun {
 						@Override
 						public void run() {
 							try {
-	              result.onResponse(output);
-              } catch (Exception e) {
-              	Log.e(LOG_TAG, e.getMessage(), e);
-              }
+								result.onResponse(output);
+							} catch (Exception e) {
+								Log.e(LOG_TAG, e.getMessage(), e);
+							}
 						}
 					});
 
