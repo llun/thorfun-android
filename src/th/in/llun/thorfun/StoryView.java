@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
 
+import th.in.llun.thorfun.api.ApiResponse;
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
 import th.in.llun.thorfun.api.model.Story;
@@ -24,12 +25,15 @@ public class StoryView extends Activity {
 
 	public static final String KEY_STORY = "story";
 
+	private Thorfun mThorfun = null;
 	private CategoryStory mStory = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_story_view);
+
+		mThorfun = Thorfun.getInstance(this);
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -77,7 +81,11 @@ public class StoryView extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.story_menu, menu);
+		if (mThorfun.isLoggedIn()) {
+			inflater.inflate(R.menu.story_loggedin_menu, menu);
+		} else {
+			inflater.inflate(R.menu.story_menu, menu);
+		}
 		return true;
 	}
 
@@ -92,6 +100,20 @@ public class StoryView extends Activity {
 			    + " #thorfun #android");
 			shareIntent.setType("text/plain");
 			startActivity(Intent.createChooser(shareIntent, "Share"));
+			return true;
+		case R.id.story_menu_like:
+			mThorfun.like(mStory.getID(), new ApiResponse<String>() {
+
+				@Override
+				public void onResponse(String result) {
+					Log.d(Thorfun.LOG_TAG, "Result: " + result);
+				}
+
+				@Override
+				public void onError(Exception exception) {
+					Log.e(Thorfun.LOG_TAG, "Can't like content", exception);
+				}
+			});
 			return true;
 		case android.R.id.home:
 			finish();

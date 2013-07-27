@@ -206,6 +206,35 @@ public class Thorfun {
 		    });
 	}
 
+	public void like(String storyID, final ApiResponse<String> result) {
+		HashMap<String, String> map = new HashMap<String, String>(1);
+		map.put("id", storyID);
+
+		invoke("http://thorfun.com/ajax/story/like", METHOD_POST, map,
+		    new BaseRemoteResult() {
+
+			    public void onResponse(String response) {
+				    result.onResponse(response);
+			    }
+
+		    });
+
+	}
+
+	public void unlike(String storyID, final ApiResponse<String> result) {
+		HashMap<String, String> map = new HashMap<String, String>(1);
+		map.put("id", storyID);
+
+		invoke("http://thorfun.com/ajax/story/unlike", METHOD_POST, map,
+		    new BaseRemoteResult() {
+
+			    public void onResponse(String response) {
+				    result.onResponse(response);
+			    }
+
+		    });
+	}
+
 	private void jsonInvoke(final String url, String method,
 	    Map<String, String> parameters, final RemoteResult result) {
 
