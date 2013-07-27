@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.TextView;
@@ -22,7 +24,7 @@ public class StoryView extends Activity {
 
 	public static final String KEY_STORY = "story";
 
-	private CategoryStory story = null;
+	private CategoryStory mStory = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class StoryView extends Activity {
 		Intent intent = getIntent();
 		String json = intent.getStringExtra(KEY_STORY);
 		try {
-			story = new CategoryStory(new JSONObject(json));
+			mStory = new CategoryStory(new JSONObject(json));
 		} catch (JSONException e) {
 			Log.e(Thorfun.LOG_TAG, "Can't parse JSON string", e);
 		}
@@ -45,13 +47,13 @@ public class StoryView extends Activity {
 		TextView like = (TextView) findViewById(R.id.story_view_favorite_text);
 		TextView time = (TextView) findViewById(R.id.story_view_time_text);
 
-		titleView.setText(Html.fromHtml(story.getTitle()));
-		username.setText(story.getNeightbour().getName());
-		like.setText("" + story.getLikeNumber());
-		time.setText(new PrettyTime().format(story.getTime()));
+		titleView.setText(Html.fromHtml(mStory.getTitle()));
+		username.setText(mStory.getNeightbour().getName());
+		like.setText("" + mStory.getLikeNumber());
+		time.setText(new PrettyTime().format(mStory.getTime()));
 
 		final WebView webView = (WebView) findViewById(R.id.story_view_webcontent);
-		Thorfun.getInstance(this).getStory(story.getID(),
+		Thorfun.getInstance(this).getStory(mStory.getID(),
 		    new ThorfunResult<Story>() {
 
 			    @Override
@@ -73,9 +75,30 @@ public class StoryView extends Activity {
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		finish();
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.story_menu, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.story_menu_share:
+			Intent shareIntent = new Intent();
+			shareIntent.setAction(Intent.ACTION_SEND);
+			shareIntent.putExtra(Intent.EXTRA_TEXT, mStory.getUrl()
+			    + " #thorfun #android");
+			shareIntent.setType("text/plain");
+			startActivity(Intent.createChooser(shareIntent, "Share"));
+			return true;
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 }

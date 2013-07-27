@@ -65,4 +65,10 @@ public class CategoryStory extends JSONRemoteObject {
 		return new Neighbour(neightbour);
 	}
 
+	public String getUrl() {
+		String username = getNeightbour().getUsername();
+		String rewardId = getID();
+		return String.format("http://thorfun.com/%s/story/%s", username, rewardId);
+	}
+
 }

@@ -11,7 +11,7 @@ public class Story extends JSONRemoteObject {
 	private JSONObject getStory() {
 		return raw.optJSONObject("story");
 	}
-	
+
 	public String getStoryDescription() {
 		JSONObject story = getStory();
 		return story.optString("desc");

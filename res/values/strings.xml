@@ -11,6 +11,7 @@
     <string name="login_cancel_button">Cancel</string>
     <string name="story_title">Story</string>
     <string name="story_row_image">Story Image</string>
+    <string name="story_menu_share">Share</string>
     <string name="board_title">Board</string>
     <string name="board_post_avatar">User Avatar Image</string>
     <string name="board_post_comment">{number} comment(s)</string>
