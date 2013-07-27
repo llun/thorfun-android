@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
 
-import th.in.llun.thorfun.api.ApiResponse;
+import th.in.llun.thorfun.api.DefaultApiResponse;
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
 import th.in.llun.thorfun.api.model.Story;
@@ -67,9 +67,10 @@ public class StoryView extends Activity {
 			    @Override
 			    public void onResponse(Story response) {
 				    if (response.isUserLiked()) {
-					    MenuItem likeMenu = mMenu.findItem(R.id.story_menu_like);
-					    Drawable icon = likeMenu.getIcon();
+					    MenuItem likeItem = mMenu.findItem(R.id.story_menu_like);
+					    Drawable icon = likeItem.getIcon();
 					    icon.setColorFilter(Color.RED, Mode.SRC_ATOP);
+					    likeItem.setChecked(true);
 				    }
 
 				    StringBuilder content = new StringBuilder(response
@@ -97,6 +98,7 @@ public class StoryView extends Activity {
 			MenuItem likeItem = menu.findItem(R.id.story_menu_like);
 			Drawable drawable = likeItem.getIcon();
 			drawable.setColorFilter(Color.WHITE, Mode.SRC_ATOP);
+			likeItem.setChecked(false);
 
 		} else {
 			inflater.inflate(R.menu.story_menu, menu);
@@ -124,18 +126,20 @@ public class StoryView extends Activity {
 			startActivity(Intent.createChooser(shareIntent, "Share"));
 			return true;
 		case R.id.story_menu_like:
-			mThorfun.like(mStory.getID(), new ApiResponse<String>() {
+			if (item.isChecked()) {
+				Drawable drawable = item.getIcon();
+				drawable.setColorFilter(Color.WHITE, Mode.SRC_ATOP);
+				item.setChecked(false);
 
-				@Override
-				public void onResponse(String result) {
-					Log.d(Thorfun.LOG_TAG, "Result: " + result);
-				}
+				mThorfun.unlike(mStory.getID(), new DefaultApiResponse<String>());
+			} else {
+				Drawable drawable = item.getIcon();
+				drawable.setColorFilter(Color.RED, Mode.SRC_ATOP);
+				item.setChecked(true);
 
-				@Override
-				public void onError(Exception exception) {
-					Log.e(Thorfun.LOG_TAG, "Can't like content", exception);
-				}
-			});
+				mThorfun.like(mStory.getID(), new DefaultApiResponse<String>());
+			}
+
 			return true;
 		case android.R.id.home:
 			finish();
