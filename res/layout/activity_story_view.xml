@@ -28,7 +28,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="@string/loading"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/story_view_favorite_text"
@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="@string/loading"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/story_view_time_text"
@@ -50,7 +50,7 @@
                 android:drawableLeft="@drawable/ic_device_access_time"
                 android:gravity="center"
                 android:text="@string/loading"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
         </RelativeLayout>
     </RelativeLayout>
 

@@ -17,6 +17,11 @@ public class Story extends JSONRemoteObject {
 		return story.optString("desc");
 	}
 
+	public boolean isUserLiked() {
+		JSONObject story = getStory();
+		return story.optBoolean("is_like");
+	}
+
 	public String getStoryData() {
 		JSONObject story = getStory();
 		JSONObject data = story.optJSONObject("data");

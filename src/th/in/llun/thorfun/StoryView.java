@@ -12,6 +12,9 @@ import th.in.llun.thorfun.api.model.ThorfunResult;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -27,6 +30,7 @@ public class StoryView extends Activity {
 
 	private Thorfun mThorfun = null;
 	private CategoryStory mStory = null;
+	private Menu mMenu = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +65,13 @@ public class StoryView extends Activity {
 		    new ThorfunResult<Story>() {
 
 			    @Override
-			    public void onResponse(final Story response) {
+			    public void onResponse(Story response) {
+				    if (response.isUserLiked()) {
+					    MenuItem likeMenu = mMenu.findItem(R.id.story_menu_like);
+					    Drawable icon = likeMenu.getIcon();
+					    icon.setColorFilter(Color.RED, Mode.SRC_ATOP);
+				    }
+
 				    StringBuilder content = new StringBuilder(response
 				        .getStoryDescription().trim());
 
@@ -83,9 +93,21 @@ public class StoryView extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		if (mThorfun.isLoggedIn()) {
 			inflater.inflate(R.menu.story_loggedin_menu, menu);
+
+			MenuItem likeItem = menu.findItem(R.id.story_menu_like);
+			Drawable drawable = likeItem.getIcon();
+			drawable.setColorFilter(Color.WHITE, Mode.SRC_ATOP);
+
 		} else {
 			inflater.inflate(R.menu.story_menu, menu);
 		}
+
+		MenuItem shareItem = menu.findItem(R.id.story_menu_share);
+		Drawable drawable = shareItem.getIcon();
+		drawable.setColorFilter(Color.WHITE, Mode.SRC_ATOP);
+
+		mMenu = menu;
+
 		return true;
 	}
 

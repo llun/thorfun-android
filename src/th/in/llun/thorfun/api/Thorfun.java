@@ -1,6 +1,10 @@
 package th.in.llun.thorfun.api;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +15,6 @@ import java.util.concurrent.Executors;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -20,8 +23,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +41,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 
 public class Thorfun {
@@ -42,7 +49,7 @@ public class Thorfun {
 	public static final String LOG_TAG = "Thorfun";
 
 	public static final String CONFIG_NAME = "thorfun.network";
-	public static final String CONFIG_KEY_TOKEN = "token";
+	public static final String CONFIG_KEY_COOKIES = "cookies";
 
 	static final String METHOD_DELETE = "delete";
 	static final String METHOD_POST = "post";
@@ -52,10 +59,13 @@ public class Thorfun {
 	private static Thorfun sInstance;
 
 	private ExecutorService mExecutor;
-	private HttpClient mClient;
-	private Context mContext;
+	private DefaultHttpClient mClient;
+	private HttpContext mClientContext;
+	private BasicCookieStore mCookieStore;
 
-	private String mToken = null;
+	private boolean mIsLoggedIn = false;
+
+	private Context mContext;
 
 	public static Thorfun getInstance(Context context) {
 		if (sInstance == null) {
@@ -68,17 +78,26 @@ public class Thorfun {
 		mContext = context;
 		mExecutor = Executors.newSingleThreadExecutor();
 		mClient = new DefaultHttpClient();
+		mClientContext = new BasicHttpContext();
 
 		SharedPreferences preference = mContext.getSharedPreferences(CONFIG_NAME,
 		    Context.MODE_PRIVATE);
-		String token = preference.getString(CONFIG_KEY_TOKEN, null);
-		if (token != null) {
-			mToken = token;
+		String cookies = preference.getString(CONFIG_KEY_COOKIES, null);
+		if (cookies != null) {
+			try {
+				mCookieStore = restoreCookieStore(cookies);
+				mIsLoggedIn = true;
+			} catch (Exception e) {
+				mCookieStore = new BasicCookieStore();
+			}
+		} else {
+			mCookieStore = new BasicCookieStore();
 		}
+		mClient.setCookieStore(mCookieStore);
 	}
 
 	public boolean isLoggedIn() {
-		return mToken != null;
+		return mIsLoggedIn;
 	}
 
 	public void login(String username, String password,
@@ -91,13 +110,18 @@ public class Thorfun {
 		    new BaseRemoteResult() {
 
 			    public void onResponse(final String token) {
-				    SharedPreferences preference = mContext.getSharedPreferences(
-				        CONFIG_NAME, Context.MODE_PRIVATE);
-				    Editor editor = preference.edit();
-				    editor.putString(CONFIG_KEY_TOKEN, token);
-				    editor.commit();
+				    try {
+					    String cookies = saveCookieStore(mCookieStore);
+					    SharedPreferences preference = mContext.getSharedPreferences(
+					        CONFIG_NAME, Context.MODE_PRIVATE);
+					    Editor editor = preference.edit();
+					    editor.putString(CONFIG_KEY_COOKIES, cookies);
+					    editor.commit();
+				    } catch (IOException e) {
+					    Log.e(Thorfun.LOG_TAG, "Can't save cookies to store", e);
+				    }
 
-				    mToken = token;
+				    mIsLoggedIn = true;
 				    result.onResponse(token);
 			    }
 
@@ -106,27 +130,22 @@ public class Thorfun {
 
 	public void logout(final ApiResponse<String> result) {
 
-		if (mToken != null) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("token", mToken);
+		invoke("http://thorfun.com/ajax/login", METHOD_DELETE,
+		    new HashMap<String, String>(0), new BaseRemoteResult() {
 
-			invoke("http://thorfun.com/ajax/login", METHOD_DELETE, map,
-			    new BaseRemoteResult() {
+			    public void onResponse(String response) {
+				    mIsLoggedIn = false;
+				    SharedPreferences preference = mContext.getSharedPreferences(
+				        CONFIG_NAME, Context.MODE_PRIVATE);
+				    Editor editor = preference.edit();
+				    editor.remove(CONFIG_KEY_COOKIES);
+				    editor.commit();
 
-				    public void onResponse(String response) {
-					    SharedPreferences preference = mContext.getSharedPreferences(
-					        CONFIG_NAME, Context.MODE_PRIVATE);
-					    Editor editor = preference.edit();
-					    editor.remove(CONFIG_KEY_TOKEN);
-					    editor.commit();
+				    result.onResponse(response);
+			    }
 
-					    mToken = null;
+		    });
 
-					    result.onResponse(response);
-				    }
-
-			    });
-		}
 	}
 
 	public void getStory(String id, final ThorfunResult<Story> result) {
@@ -264,10 +283,6 @@ public class Thorfun {
 			pairs.add(new BasicNameValuePair(key, parameters.get(key)));
 		}
 
-		if (mToken != null) {
-			pairs.add(new BasicNameValuePair("token", mToken));
-		}
-
 		HttpUriRequest request = null;
 		if (method.equals(METHOD_DELETE) || method.equals(METHOD_GET)
 		    || method == null) {
@@ -301,6 +316,7 @@ public class Thorfun {
 
 			request = entityEnclosing;
 		}
+
 		final HttpUriRequest finalRequest = request;
 
 		mExecutor.submit(new Runnable() {
@@ -308,7 +324,7 @@ public class Thorfun {
 			@Override
 			public void run() {
 				try {
-					HttpResponse response = mClient.execute(finalRequest);
+					HttpResponse response = mClient.execute(finalRequest, mClientContext);
 					HttpEntity entity = response.getEntity();
 
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -336,4 +352,26 @@ public class Thorfun {
 		});
 
 	}
+
+	private static BasicCookieStore restoreCookieStore(String string)
+	    throws IOException, ClassNotFoundException {
+
+		byte[] data = Base64.decode(string, Base64.DEFAULT);
+		ObjectInputStream inputStream = new ObjectInputStream(
+		    new ByteArrayInputStream(data));
+		BasicCookieStore cookieStore = (BasicCookieStore) inputStream.readObject();
+		inputStream.close();
+		return cookieStore;
+	}
+
+	private static String saveCookieStore(BasicCookieStore cookieStore)
+	    throws IOException {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+		objectOutputStream.writeObject(cookieStore);
+		objectOutputStream.close();
+
+		return new String(Base64.encode(outputStream.toByteArray(), Base64.DEFAULT));
+	}
+
 }

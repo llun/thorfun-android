@@ -3,11 +3,12 @@
 
     <item
         android:id="@+id/story_menu_like"
+        android:icon="@drawable/story_menu_like"
         android:showAsAction="ifRoom|withText"
         android:title="@string/story_menu_like"/>
     <item
         android:id="@+id/story_menu_share"
-        android:icon="@android:drawable/ic_menu_share"
+        android:icon="@drawable/story_menu_share"
         android:showAsAction="ifRoom|withText"
         android:title="@string/story_menu_share"/>
 
