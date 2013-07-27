@@ -5,6 +5,7 @@ import java.util.Locale;
 import th.in.llun.thorfun.api.ApiResponse;
 import th.in.llun.thorfun.api.Thorfun;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -26,7 +28,7 @@ public class MainView extends FragmentActivity {
 	public static final String PAGE_LOGIN = "login";
 	public static final String PAGE_MAIN_LOGGEDIN = "main_loggedin";
 
-	private String page;
+	private String mPage;
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 
 	/**
@@ -46,11 +48,11 @@ public class MainView extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (page == PAGE_MAIN) {
+		if (mPage == PAGE_MAIN) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.activity_main_menu, menu);
 			return true;
-		} else if (page == PAGE_MAIN_LOGGEDIN) {
+		} else if (mPage == PAGE_MAIN_LOGGEDIN) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.activity_loggedin_menu, menu);
 			return true;
@@ -77,31 +79,39 @@ public class MainView extends FragmentActivity {
 	private void showLogin() {
 		setContentView(R.layout.activity_main_view_login);
 
-		page = PAGE_LOGIN;
+		mPage = PAGE_LOGIN;
 		invalidateOptionsMenu();
 
-		final Activity mActivity = this;
-		Button mCancelButton = (Button) findViewById(R.id.login_cancel_button);
-		mCancelButton.setOnClickListener(new OnClickListener() {
+		final Activity activity = this;
+		Button cancelButton = (Button) findViewById(R.id.login_cancel_button);
+		cancelButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
+				InputMethodManager inputManager = (InputMethodManager) activity
+				    .getSystemService(Context.INPUT_METHOD_SERVICE);
+				inputManager.hideSoftInputFromWindow(activity.getCurrentFocus()
+				    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				showMain();
 			}
 		});
 
-		final EditText mUsername = (EditText) findViewById(R.id.login_username_field);
-		final EditText mPassword = (EditText) findViewById(R.id.login_password_field);
-		Button mLoginButton = (Button) findViewById(R.id.login_submit_button);
-		mLoginButton.setOnClickListener(new OnClickListener() {
+		final EditText username = (EditText) findViewById(R.id.login_username_field);
+		final EditText password = (EditText) findViewById(R.id.login_password_field);
+		Button loginButton = (Button) findViewById(R.id.login_submit_button);
+		loginButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Thorfun.getInstance(mActivity).login(mUsername.getText().toString(),
-				    mPassword.getText().toString(), new ApiResponse<String>() {
+				Thorfun.getInstance(activity).login(username.getText().toString(),
+				    password.getText().toString(), new ApiResponse<String>() {
 
 					    @Override
 					    public void onResponse(String result) {
+					    	InputMethodManager inputManager = (InputMethodManager) activity
+								    .getSystemService(Context.INPUT_METHOD_SERVICE);
+								inputManager.hideSoftInputFromWindow(activity.getCurrentFocus()
+								    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 						    showMain();
 					    }
 
@@ -119,9 +129,9 @@ public class MainView extends FragmentActivity {
 		setContentView(R.layout.activity_main_view);
 
 		if (Thorfun.getInstance(this).isLoggedIn()) {
-			page = PAGE_MAIN_LOGGEDIN;
+			mPage = PAGE_MAIN_LOGGEDIN;
 		} else {
-			page = PAGE_MAIN;
+			mPage = PAGE_MAIN;
 		}
 
 		invalidateOptionsMenu();
@@ -141,7 +151,7 @@ public class MainView extends FragmentActivity {
 
 			@Override
 			public void onResponse(String result) {
-				page = PAGE_MAIN;
+				mPage = PAGE_MAIN;
 				invalidateOptionsMenu();
 			}
 
