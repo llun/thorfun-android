@@ -1,13 +1,10 @@
 package th.in.llun.thorfun.api;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,8 +20,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -110,16 +109,12 @@ public class Thorfun {
 		    new BaseRemoteResult() {
 
 			    public void onResponse(final String token) {
-				    try {
-					    String cookies = saveCookieStore(mCookieStore);
-					    SharedPreferences preference = mContext.getSharedPreferences(
-					        CONFIG_NAME, Context.MODE_PRIVATE);
-					    Editor editor = preference.edit();
-					    editor.putString(CONFIG_KEY_COOKIES, cookies);
-					    editor.commit();
-				    } catch (IOException e) {
-					    Log.e(Thorfun.LOG_TAG, "Can't save cookies to store", e);
-				    }
+				    String cookies = saveCookieStore(mCookieStore);
+				    SharedPreferences preference = mContext.getSharedPreferences(
+				        CONFIG_NAME, Context.MODE_PRIVATE);
+				    Editor editor = preference.edit();
+				    editor.putString(CONFIG_KEY_COOKIES, cookies);
+				    editor.commit();
 
 				    mIsLoggedIn = true;
 				    result.onResponse(token);
@@ -353,25 +348,32 @@ public class Thorfun {
 
 	}
 
-	private static BasicCookieStore restoreCookieStore(String string)
-	    throws IOException, ClassNotFoundException {
+	private static BasicCookieStore restoreCookieStore(String string) {
+		BasicCookieStore cookieStore = new BasicCookieStore();
 
-		byte[] data = Base64.decode(string, Base64.DEFAULT);
-		ObjectInputStream inputStream = new ObjectInputStream(
-		    new ByteArrayInputStream(data));
-		BasicCookieStore cookieStore = (BasicCookieStore) inputStream.readObject();
-		inputStream.close();
+		String[] cookies = string.split("$");
+		for (String cookie : cookies) {
+			String[] fragments = cookie.split("%");
+			cookieStore.addCookie(new BasicClientCookie(fragments[0], fragments[1]));
+		}
+
 		return cookieStore;
 	}
 
-	private static String saveCookieStore(BasicCookieStore cookieStore)
-	    throws IOException {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-		objectOutputStream.writeObject(cookieStore);
-		objectOutputStream.close();
+	private static String saveCookieStore(BasicCookieStore cookieStore) {
+		StringBuilder output = new StringBuilder();
+		List<Cookie> cookies = cookieStore.getCookies();
+		for (Cookie cookie : cookies) {
+			String name = Base64.encodeToString(cookie.getName().getBytes(),
+			    Base64.DEFAULT);
+			String value = Base64.encodeToString(cookie.getValue().getBytes(),
+			    Base64.DEFAULT);
+			String cookieString = name + "%" + value;
+			output.append(cookieString + "$");
+		}
+		output.deleteCharAt(output.length() - 1);
 
-		return new String(Base64.encode(outputStream.toByteArray(), Base64.DEFAULT));
+		return output.toString();
 	}
 
 }
