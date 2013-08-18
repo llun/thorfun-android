@@ -76,35 +76,35 @@ public class StoryFragment extends Fragment {
 
 	private static class StoryAdapter extends BaseAdapter {
 
-		final private List<CategoryStory> stories = new ArrayList<CategoryStory>(0);
-		private LayoutInflater inflater = null;
-		private Activity activity = null;
+		final private List<CategoryStory> mStories = new ArrayList<CategoryStory>(0);
+		private LayoutInflater mInflater = null;
+		private Activity mActivity = null;
 
-		private boolean isLoading = false;
-		private boolean isLastPage = false;
+		private boolean mIsLoading = false;
+		private boolean mIsLastPage = false;
 
 		public StoryAdapter(Activity activity, LayoutInflater inflater) {
-			this.activity = activity;
-			this.inflater = inflater;
+			mActivity = activity;
+			mInflater = inflater;
 		}
 
 		public void setStories(List<CategoryStory> stories) {
-			this.stories.clear();
-			this.stories.addAll(stories);
-			this.notifyDataSetChanged();
+			mStories.clear();
+			mStories.addAll(stories);
+			notifyDataSetChanged();
 		}
 
 		@Override
 		public int getCount() {
-			if (stories.size() > 0) {
-				return stories.size() + 2;
+			if (mStories.size() > 0) {
+				return mStories.size() + 2;
 			}
 			return 0;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return stories.get(position - 1);
+			return mStories.get(position - 1);
 		}
 
 		@Override
@@ -125,26 +125,26 @@ public class StoryFragment extends Fragment {
 			else if (position == getCount() - 1) {
 				RelativeLayout row = (RelativeLayout) convertView;
 				if (row == null) {
-					row = (RelativeLayout) inflater.inflate(
+					row = (RelativeLayout) mInflater.inflate(
 					    R.layout.fragment_loading_row, parent, false);
 				}
 
 				final BaseAdapter self = this;
 
-				if (!isLoading && !isLastPage) {
-					isLoading = true;
-					CategoryStory story = stories.get(stories.size() - 1);
-					Thorfun.getInstance(activity).loadStory(story,
+				if (!mIsLoading && !mIsLastPage) {
+					mIsLoading = true;
+					CategoryStory story = mStories.get(mStories.size() - 1);
+					Thorfun.getInstance(mActivity).loadStory(story,
 					    new ThorfunResult<RemoteCollection<CategoryStory>>() {
 
 						    @Override
 						    public void onResponse(RemoteCollection<CategoryStory> response) {
-							    isLoading = false;
+							    mIsLoading = false;
 
 							    List<CategoryStory> next = response.collection();
 							    if (next.size() > 0) {
-								    stories.addAll(next);
-								    activity.runOnUiThread(new Runnable() {
+								    mStories.addAll(next);
+								    mActivity.runOnUiThread(new Runnable() {
 
 									    @Override
 									    public void run() {
@@ -152,14 +152,14 @@ public class StoryFragment extends Fragment {
 									    }
 								    });
 							    } else {
-								    isLastPage = true;
+								    mIsLastPage = true;
 							    }
 
 						    };
 					    });
 				}
 
-				if (isLastPage) {
+				if (mIsLastPage) {
 					row.setVisibility(View.GONE);
 				}
 
@@ -169,11 +169,11 @@ public class StoryFragment extends Fragment {
 			else {
 				RelativeLayout row = (RelativeLayout) convertView;
 				if (row == null) {
-					row = (RelativeLayout) inflater.inflate(R.layout.fragment_story_row,
+					row = (RelativeLayout) mInflater.inflate(R.layout.fragment_story_row,
 					    parent, false);
 				}
 
-				CategoryStory story = stories.get(position - 1);
+				CategoryStory story = mStories.get(position - 1);
 
 				ImageView icon = (ImageView) row.findViewById(R.id.story_row_icon);
 				ViewGroup loading = (ViewGroup) row
@@ -202,11 +202,11 @@ public class StoryFragment extends Fragment {
 					@Override
 					public void onClick(View view) {
 						int position = (Integer) view.getTag();
-						CategoryStory story = stories.get(position);
+						CategoryStory story = mStories.get(position);
 
-						Intent intent = new Intent(activity, StoryView.class);
+						Intent intent = new Intent(mActivity, StoryView.class);
 						intent.putExtra(StoryView.KEY_STORY, story.rawString());
-						activity.startActivity(intent);
+						mActivity.startActivity(intent);
 					}
 				});
 
