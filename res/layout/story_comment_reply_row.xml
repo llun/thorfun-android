@@ -3,7 +3,7 @@
     android:id="@+id/story_comment_row"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/thorfun.story_comment_background"
+    android:background="@color/thorfun.story_comment_reply_background"
     android:padding="6dp" >
 
     <ImageView
@@ -56,15 +56,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/story_comment_user"
         android:layout_below="@+id/story_comment_user"
-        android:minHeight="60dp"
         android:text="@string/loading" />
-
-    <ListView
-        android:id="@+id/story_comment_replies"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/story_comment_text"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp" />
 
 </RelativeLayout>

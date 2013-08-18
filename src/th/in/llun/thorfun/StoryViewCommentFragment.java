@@ -12,6 +12,7 @@ import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
 import th.in.llun.thorfun.api.model.Comment;
 import th.in.llun.thorfun.api.model.RemoteCollection;
+import th.in.llun.thorfun.api.model.Reply;
 import th.in.llun.thorfun.api.model.ThorfunResult;
 import th.in.llun.thorfun.utils.ImageLoader;
 import android.os.Bundle;
@@ -101,8 +102,8 @@ public class StoryViewCommentFragment extends Fragment {
 
 	private static class CommentAdapter extends BaseAdapter {
 
-		LayoutInflater mInflater;
-		List<Comment> mComments;
+		private LayoutInflater mInflater;
+		private List<Comment> mComments;
 
 		public CommentAdapter(LayoutInflater inflater, List<Comment> comments) {
 			mInflater = inflater;
@@ -136,6 +137,15 @@ public class StoryViewCommentFragment extends Fragment {
 			TextView timeText = (TextView) row.findViewById(R.id.story_comment_time);
 			timeText.setText(new PrettyTime().format(comment.getTime()));
 
+			ListView repliesView = (ListView) row
+			    .findViewById(R.id.story_comment_replies);
+			repliesView.setAdapter(new ReplyAdapter(mInflater, comment.getReply()));
+			if (comment.getReply().size() == 0) {
+				repliesView.setVisibility(View.GONE);
+			} else {
+				repliesView.setVisibility(View.VISIBLE);
+			}
+
 			return row;
 		}
 
@@ -153,6 +163,64 @@ public class StoryViewCommentFragment extends Fragment {
 		public int getCount() {
 			return mComments.size();
 		}
+	}
+
+	private static class ReplyAdapter extends BaseAdapter {
+
+		private LayoutInflater mInflater;
+		private List<Reply> mReplies;
+
+		public ReplyAdapter(LayoutInflater inflater, List<Reply> replies) {
+			mInflater = inflater;
+			mReplies = replies;
+		}
+
+		@Override
+		public int getCount() {
+			return mReplies.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return mReplies.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return mReplies.get(position).getID();
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View row = convertView;
+			if (row == null) {
+				row = mInflater
+				    .inflate(R.layout.story_comment_reply_row, parent, false);
+			}
+
+			Reply reply = mReplies.get(position);
+
+			ImageView icon = (ImageView) row.findViewById(R.id.story_comment_avatar);
+			ViewGroup loading = (ViewGroup) row
+			    .findViewById(R.id.story_comment_progress_box);
+			loading.setVisibility(View.VISIBLE);
+			new ImageLoader(icon, loading).execute(reply.getNeightbour()
+			    .getImageURL());
+
+			TextView usernameText = (TextView) row
+			    .findViewById(R.id.story_comment_user);
+			usernameText.setText(reply.getNeightbour().getName());
+
+			TextView commentText = (TextView) row
+			    .findViewById(R.id.story_comment_text);
+			commentText.setText(Html.fromHtml(reply.getText()));
+
+			TextView timeText = (TextView) row.findViewById(R.id.story_comment_time);
+			timeText.setText(new PrettyTime().format(reply.getTime()));
+
+			return row;
+		}
+
 	}
 
 }

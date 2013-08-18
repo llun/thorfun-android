@@ -11,5 +11,6 @@
     <color name="thorfun.story_view_title_text_color">#2e5e8a</color>
     <color name="thorfun.story_comment_background">#ffffff</color>
     <color name="thorfun.story_comment_header">#888888</color>
+    <color name="thorfun.story_comment_reply_background">#e8f0f5</color>
 
 </resources>
