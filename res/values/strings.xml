@@ -15,6 +15,7 @@
     <string name="story_menu_like">Like</string>
     <string name="story_view_menu_content">Content</string>
     <string name="story_view_menu_comments">Comments</string>
+    <string name="story_comment_avartar">User avatar Image</string>
     <string name="board_title">Board</string>
     <string name="board_post_avatar">User Avatar Image</string>
     <string name="board_post_comment">{number} comment(s)</string>

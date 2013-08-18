@@ -6,19 +6,23 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ocpsoft.prettytime.PrettyTime;
 
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
 import th.in.llun.thorfun.api.model.Comment;
 import th.in.llun.thorfun.api.model.RemoteCollection;
 import th.in.llun.thorfun.api.model.ThorfunResult;
+import th.in.llun.thorfun.utils.ImageLoader;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -112,9 +116,25 @@ public class StoryViewCommentFragment extends Fragment {
 				row = mInflater.inflate(R.layout.story_comment_row, parent, false);
 			}
 
+			Comment comment = mComments.get(position);
+
+			ImageView icon = (ImageView) row.findViewById(R.id.story_comment_avatar);
+			ViewGroup loading = (ViewGroup) row
+			    .findViewById(R.id.story_comment_progress_box);
+			loading.setVisibility(View.VISIBLE);
+			new ImageLoader(icon, loading).execute(comment.getNeightbour()
+			    .getImageURL());
+
+			TextView usernameText = (TextView) row
+			    .findViewById(R.id.story_comment_user);
+			usernameText.setText(comment.getNeightbour().getName());
+
 			TextView commentText = (TextView) row
 			    .findViewById(R.id.story_comment_text);
-			commentText.setText(mComments.get(position).getText());
+			commentText.setText(Html.fromHtml(comment.getText()));
+
+			TextView timeText = (TextView) row.findViewById(R.id.story_comment_time);
+			timeText.setText(new PrettyTime().format(comment.getTime()));
 
 			return row;
 		}

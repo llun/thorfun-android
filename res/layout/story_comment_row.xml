@@ -2,12 +2,60 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/story_comment_row"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/thorfun.story_comment_background"
+    android:padding="6dp" >
+
+    <ImageView
+        android:id="@+id/story_comment_avatar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="6dp"
+        android:contentDescription="@string/story_comment_avartar" />
+
+    <RelativeLayout
+        android:id="@+id/story_comment_progress_box"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignBottom="@id/story_comment_avatar"
+        android:layout_alignLeft="@id/story_comment_avatar"
+        android:layout_alignRight="@id/story_comment_avatar"
+        android:layout_alignTop="@id/story_comment_avatar"
+        android:background="@color/thorfun.loading_background" >
+
+        <ProgressBar
+            android:id="@+id/story_comment_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/story_comment_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_toLeftOf="@+id/story_comment_time"
+        android:layout_toRightOf="@+id/story_comment_avatar"
+        android:text="@string/loading"
+        android:textColor="@color/thorfun.story_comment_header"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/story_comment_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="@string/loading"
+        android:textColor="@color/thorfun.story_comment_header" />
 
     <TextView
         android:id="@+id/story_comment_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/story_comment_user"
+        android:layout_below="@+id/story_comment_user"
         android:text="@string/loading" />
 
 </RelativeLayout>
