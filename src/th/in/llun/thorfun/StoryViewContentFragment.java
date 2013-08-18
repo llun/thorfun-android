@@ -58,10 +58,4 @@ public class StoryViewContentFragment extends Fragment {
 		return rootView;
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-
-	}
-
 }

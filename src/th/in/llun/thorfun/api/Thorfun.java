@@ -259,9 +259,8 @@ public class Thorfun {
 			map.put("skipId", Integer.toString(lastComment.getID()));
 		}
 
-		invoke(
-		    "http://thorfun.com/ajax/story/comment_before",
-		    METHOD_GET, map, new BaseRemoteResult() {
+		jsonInvoke("http://thorfun.com/ajax/story/comment_before", METHOD_GET, map,
+		    new BaseRemoteResult() {
 
 			    @Override
 			    public void onResponse(JSONArray responses) throws Exception {
