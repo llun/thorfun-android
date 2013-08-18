@@ -6,7 +6,8 @@
     <RelativeLayout
         android:id="@+id/story_view_head"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="@color/thorfun.pagertitle_background" >
 
         <TextView
             android:id="@+id/story_view_title"
@@ -60,7 +61,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/story_view_head" >
 
-        <android.support.v4.view.PagerTitleStrip
+        <android.support.v4.view.PagerTabStrip
             android:id="@+id/pager_title_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
