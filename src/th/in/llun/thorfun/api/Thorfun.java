@@ -32,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import th.in.llun.thorfun.api.model.CategoryStory;
+import th.in.llun.thorfun.api.model.Comment;
 import th.in.llun.thorfun.api.model.Post;
 import th.in.llun.thorfun.api.model.RemoteCollection;
 import th.in.llun.thorfun.api.model.Story;
@@ -244,6 +245,34 @@ public class Thorfun {
 
 			    public void onResponse(String response) {
 				    result.onResponse(response);
+			    }
+
+		    });
+	}
+
+	public void loadComments(CategoryStory story, Comment lastComment,
+	    final ThorfunResult<RemoteCollection<Comment>> result) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("limit", "10");
+		map.put("id", story.getID());
+		if (lastComment != null) {
+			map.put("skipId", Integer.toString(lastComment.getID()));
+		}
+
+		invoke(
+		    "http://thorfun.com/ajax/story/comment_before",
+		    METHOD_GET, map, new BaseRemoteResult() {
+
+			    @Override
+			    public void onResponse(JSONArray responses) throws Exception {
+				    ArrayList<Comment> comments = new ArrayList<Comment>(responses
+				        .length());
+				    for (int index = 0; index < responses.length(); index++) {
+					    JSONObject object = responses.optJSONObject(index);
+					    comments.add(new Comment(object));
+				    }
+
+				    result.onResponse(new RemoteCollection<Comment>(comments));
 			    }
 
 		    });
