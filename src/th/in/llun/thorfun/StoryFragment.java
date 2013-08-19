@@ -28,19 +28,20 @@ import android.widget.TextView;
 
 public class StoryFragment extends Fragment {
 
-	private Thorfun thorfun;
-	private StoryAdapter adapter;
+	private Thorfun mThorfun;
+	private StoryAdapter mAdapter;
+	private String mSortBy;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
-		thorfun = Thorfun.getInstance(getActivity());
-		adapter = new StoryAdapter(getActivity(),
-		    getLayoutInflater(savedInstanceState));
+		mThorfun = Thorfun.getInstance(getActivity());
+		mAdapter = new StoryAdapter(getActivity(),
+		    getLayoutInflater(savedInstanceState), mSortBy);
 
 		View rootView = inflater.inflate(R.layout.fragment_story, container, false);
 		GridView grid = (GridView) rootView.findViewById(R.id.story_grid);
-		grid.setAdapter(adapter);
+		grid.setAdapter(mAdapter);
 
 		return rootView;
 	}
@@ -54,7 +55,13 @@ public class StoryFragment extends Fragment {
 		    .findViewById(R.id.story_loading);
 
 		Log.d(Thorfun.LOG_TAG, "Load story");
-		thorfun.loadStory(null,
+
+		mSortBy = CategoryStory.SORT_HOT;
+		if (mThorfun.isLoggedIn()) {
+			mSortBy = CategoryStory.SORT_TIME;
+		}
+
+		mThorfun.loadStory(null, mSortBy,
 		    new ThorfunResult<RemoteCollection<CategoryStory>>() {
 
 			    @Override
@@ -65,7 +72,7 @@ public class StoryFragment extends Fragment {
 					    @Override
 					    public void run() {
 						    layout.setVisibility(View.GONE);
-						    adapter.setStories(stories);
+						    mAdapter.setStories(stories);
 					    }
 				    });
 
@@ -83,9 +90,13 @@ public class StoryFragment extends Fragment {
 		private boolean mIsLoading = false;
 		private boolean mIsLastPage = false;
 
-		public StoryAdapter(Activity activity, LayoutInflater inflater) {
+		private String mSortBy = CategoryStory.SORT_HOT;
+
+		public StoryAdapter(Activity activity, LayoutInflater inflater,
+		    String sortBy) {
 			mActivity = activity;
 			mInflater = inflater;
+			mSortBy = sortBy;
 		}
 
 		public void setStories(List<CategoryStory> stories) {
@@ -134,7 +145,7 @@ public class StoryFragment extends Fragment {
 				if (!mIsLoading && !mIsLastPage) {
 					mIsLoading = true;
 					CategoryStory story = mStories.get(mStories.size() - 1);
-					Thorfun.getInstance(mActivity).loadStory(story,
+					Thorfun.getInstance(mActivity).loadStory(story, mSortBy,
 					    new ThorfunResult<RemoteCollection<CategoryStory>>() {
 
 						    @Override

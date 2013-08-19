@@ -158,7 +158,7 @@ public class Thorfun {
 		    });
 	}
 
-	public void loadStory(CategoryStory lastStory,
+	public void loadStory(CategoryStory lastStory, String sort,
 	    final ThorfunResult<RemoteCollection<CategoryStory>> result) {
 
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -166,7 +166,7 @@ public class Thorfun {
 		map.put("following", "false");
 		map.put("popular", "false");
 		map.put("editor_pick", "false");
-		map.put("sort", "hot");
+		map.put("sort", sort);
 		map.put("limit", "15");
 		if (lastStory != null) {
 			map.put("skipId", lastStory.getID());
@@ -275,6 +275,22 @@ public class Thorfun {
 			    }
 
 		    });
+	}
+
+	public void comment(CategoryStory story, String text,
+	    final ThorfunResult<Comment> result) {
+		HashMap<String, String> map = new HashMap<String, String>(3);
+		map.put("id", story.getID());
+
+		jsonInvoke("http://thorfun.com/ajax/story/comment", METHOD_POST, map,
+		    new BaseRemoteResult() {
+
+			    @Override
+			    public void onResponse(JSONObject response) throws Exception {
+				    result.onResponse(new Comment(response));
+			    }
+		    });
+
 	}
 
 	private void jsonInvoke(final String url, String method,

@@ -22,8 +22,11 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -58,6 +61,34 @@ public class StoryViewCommentFragment extends Fragment {
 			mAdapter = new CommentAdapter(getActivity(), inflater, mStory, mComments);
 			commentList.setAdapter(mAdapter);
 
+			View commentBox = rootView.findViewById(R.id.story_comment_field);
+			if (mThorfun.isLoggedIn()) {
+				commentBox.setVisibility(View.VISIBLE);
+			} else {
+				commentBox.setVisibility(View.GONE);
+			}
+
+			final EditText commentField = (EditText) commentBox
+			    .findViewById(R.id.story_comment_input_text);
+			Button commentButton = (Button) commentBox
+			    .findViewById(R.id.story_comment_submit);
+			commentButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					String input = commentField.getText().toString();
+					commentField.setText("");
+
+					mThorfun.comment(mStory, input, new ThorfunResult<Comment>() {
+
+						@Override
+						public void onResponse(Comment response) {
+							reloadComment();
+						}
+					});
+				}
+			});
+
 			if (savedInstanceState != null) {
 				String serialize = savedInstanceState.getString(KEY_COMMENTS);
 				try {
@@ -72,22 +103,26 @@ public class StoryViewCommentFragment extends Fragment {
 				}
 
 			} else {
-				mThorfun.loadComments(mStory, null,
-				    new ThorfunResult<RemoteCollection<Comment>>() {
-
-					    @Override
-					    public void onResponse(RemoteCollection<Comment> response) {
-						    List<Comment> comments = response.collection();
-						    mComments.addAll(comments);
-						    mAdapter.notifyDataSetChanged();
-					    }
-				    });
+				reloadComment();
 			}
 		} catch (JSONException e1) {
 			Log.e(Thorfun.LOG_TAG, "Cannot parse arguments", e1);
 		}
 
 		return rootView;
+	}
+
+	private void reloadComment() {
+		mThorfun.loadComments(mStory, null,
+		    new ThorfunResult<RemoteCollection<Comment>>() {
+
+			    @Override
+			    public void onResponse(RemoteCollection<Comment> response) {
+				    List<Comment> comments = response.collection();
+				    mComments.addAll(comments);
+				    mAdapter.notifyDataSetChanged();
+			    }
+		    });
 	}
 
 	@Override

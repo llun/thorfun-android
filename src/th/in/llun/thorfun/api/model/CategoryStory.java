@@ -10,6 +10,9 @@ import android.util.Log;
 
 public class CategoryStory extends JSONRemoteObject {
 
+	public static final String SORT_HOT = "hot";
+	public static final String SORT_TIME = "time";
+
 	public static final String STATUS_NORMAL = "normal";
 
 	public static final String PRIVACY_PUBLIC = "public";

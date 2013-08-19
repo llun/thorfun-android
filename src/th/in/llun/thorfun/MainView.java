@@ -41,7 +41,7 @@ public class MainView extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
-		    getSupportFragmentManager());
+		    getSupportFragmentManager(), Thorfun.getInstance(this));
 
 		showMain();
 	}
@@ -108,10 +108,10 @@ public class MainView extends FragmentActivity {
 
 					    @Override
 					    public void onResponse(String result) {
-					    	InputMethodManager inputManager = (InputMethodManager) activity
-								    .getSystemService(Context.INPUT_METHOD_SERVICE);
-								inputManager.hideSoftInputFromWindow(activity.getCurrentFocus()
-								    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+						    InputMethodManager inputManager = (InputMethodManager) activity
+						        .getSystemService(Context.INPUT_METHOD_SERVICE);
+						    inputManager.hideSoftInputFromWindow(activity.getCurrentFocus()
+						        .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 						    showMain();
 					    }
 
@@ -164,8 +164,11 @@ public class MainView extends FragmentActivity {
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-		public SectionsPagerAdapter(FragmentManager fm) {
+		private Thorfun mThorfun;
+
+		public SectionsPagerAdapter(FragmentManager fm, Thorfun thorfun) {
 			super(fm);
+			mThorfun = thorfun;
 		}
 
 		@Override
@@ -186,6 +189,9 @@ public class MainView extends FragmentActivity {
 
 		@Override
 		public int getCount() {
+			if (mThorfun.isLoggedIn()) {
+				return 3;
+			}
 			return 2;
 		}
 
