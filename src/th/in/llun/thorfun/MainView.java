@@ -200,6 +200,8 @@ public class MainView extends FragmentActivity {
 			}
 			mOptions.add(story);
 			mOptions.add(board);
+
+			this.notifyDataSetChanged();
 		}
 
 		@Override
@@ -214,7 +216,7 @@ public class MainView extends FragmentActivity {
 		}
 
 		public int getItemPosition(Object object) {
-			return POSITION_NONE;
+			return mOptions.indexOf(object);
 		}
 
 		@Override
