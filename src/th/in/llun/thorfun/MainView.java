@@ -1,5 +1,7 @@
 package th.in.llun.thorfun;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import th.in.llun.thorfun.api.ApiResponse;
@@ -135,6 +137,7 @@ public class MainView extends FragmentActivity {
 		}
 
 		invalidateOptionsMenu();
+		mSectionsPagerAdapter.update();
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -164,35 +167,50 @@ public class MainView extends FragmentActivity {
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+		private static final String KEY_TITLE = "title";
+		private static final String KEY_FRAGMENT = "fragment";
+
 		private Thorfun mThorfun;
+		private ArrayList<HashMap<String, Object>> mOptions = new ArrayList<HashMap<String, Object>>(
+		    3);
 
 		public SectionsPagerAdapter(FragmentManager fm, Thorfun thorfun) {
 			super(fm);
 			mThorfun = thorfun;
 		}
 
+		public void update() {
+			Locale l = Locale.getDefault();
+
+			mOptions.clear();
+			HashMap<String, Object> myStory = new HashMap<String, Object>();
+			myStory.put(KEY_TITLE, getString(R.string.my_story_title).toUpperCase(l));
+			myStory.put(KEY_FRAGMENT, new MyStoryFragment());
+
+			HashMap<String, Object> story = new HashMap<String, Object>();
+			story.put(KEY_TITLE, getString(R.string.story_title).toUpperCase(l));
+			story.put(KEY_FRAGMENT, new StoryFragment());
+
+			HashMap<String, Object> board = new HashMap<String, Object>();
+			board.put(KEY_TITLE, getString(R.string.board_title).toUpperCase(l));
+			board.put(KEY_FRAGMENT, new BoardFragment());
+
+			if (mThorfun.isLoggedIn()) {
+				mOptions.add(myStory);
+			}
+			mOptions.add(story);
+			mOptions.add(board);
+		}
+
 		@Override
 		public Fragment getItem(int position) {
-			Fragment fragment = null;
-			switch (position) {
-			case 0:
-				fragment = new StoryFragment();
-				break;
-
-			case 1:
-				fragment = new BoardFragment();
-				break;
-			}
-
+			Fragment fragment = (Fragment) mOptions.get(position).get(KEY_FRAGMENT);
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
-			if (mThorfun.isLoggedIn()) {
-				return 3;
-			}
-			return 2;
+			return mOptions.size();
 		}
 
 		public int getItemPosition(Object object) {
@@ -201,14 +219,7 @@ public class MainView extends FragmentActivity {
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			Locale l = Locale.getDefault();
-			switch (position) {
-			case 0:
-				return getString(R.string.story_title).toUpperCase(l);
-			case 1:
-				return getString(R.string.board_title).toUpperCase(l);
-			}
-			return null;
+			return (String) mOptions.get(position).get(KEY_TITLE);
 		}
 	}
 

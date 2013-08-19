@@ -4,6 +4,7 @@ import java.util.List;
 
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
+import th.in.llun.thorfun.api.model.Neighbour;
 import th.in.llun.thorfun.api.model.RemoteCollection;
 import th.in.llun.thorfun.api.model.ThorfunResult;
 import android.app.Activity;
@@ -16,18 +17,17 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 
-public class StoryFragment extends Fragment {
-
+public class MyStoryFragment extends Fragment {
 	private Thorfun mThorfun;
-	private StoryAdapter mAdapter;
-	private String mSortBy;
+	private MyStoryAdapter mAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
 		mThorfun = Thorfun.getInstance(getActivity());
-		mAdapter = new StoryAdapter(getActivity(),
-		    getLayoutInflater(savedInstanceState), mSortBy);
+
+		mAdapter = new MyStoryAdapter(getActivity(),
+		    getLayoutInflater(savedInstanceState));
 
 		View rootView = inflater.inflate(R.layout.fragment_story, container, false);
 		GridView grid = (GridView) rootView.findViewById(R.id.story_grid);
@@ -45,30 +45,31 @@ public class StoryFragment extends Fragment {
 		    .findViewById(R.id.story_loading);
 
 		Log.d(Thorfun.LOG_TAG, "Load story");
+		mThorfun.getSelfNeighbour(new ThorfunResult<Neighbour>() {
 
-		mSortBy = CategoryStory.SORT_HOT;
-		if (mThorfun.isLoggedIn()) {
-			mSortBy = CategoryStory.SORT_TIME;
-		}
-
-		mThorfun.loadStory(null, mSortBy,
-		    new ThorfunResult<RemoteCollection<CategoryStory>>() {
-
-			    @Override
-			    public void onResponse(RemoteCollection<CategoryStory> response) {
-				    final List<CategoryStory> stories = response.collection();
-				    activity.runOnUiThread(new Runnable() {
+			@Override
+			public void onResponse(Neighbour response) {
+				mAdapter.setUsername(response.getUsername());
+				mThorfun.loadMyStory(null, response.getUsername(),
+				    new ThorfunResult<RemoteCollection<CategoryStory>>() {
 
 					    @Override
-					    public void run() {
-						    layout.setVisibility(View.GONE);
-						    mAdapter.setStories(stories);
+					    public void onResponse(RemoteCollection<CategoryStory> response) {
+						    final List<CategoryStory> stories = response.collection();
+						    activity.runOnUiThread(new Runnable() {
+
+							    @Override
+							    public void run() {
+								    layout.setVisibility(View.GONE);
+								    mAdapter.setStories(stories);
+							    }
+						    });
+
 					    }
+
 				    });
+			}
+		});
 
-			    }
-
-		    });
 	}
-
 }

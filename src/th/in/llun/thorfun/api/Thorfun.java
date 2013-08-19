@@ -33,6 +33,7 @@ import org.json.JSONObject;
 
 import th.in.llun.thorfun.api.model.CategoryStory;
 import th.in.llun.thorfun.api.model.Comment;
+import th.in.llun.thorfun.api.model.Neighbour;
 import th.in.llun.thorfun.api.model.Post;
 import th.in.llun.thorfun.api.model.RemoteCollection;
 import th.in.llun.thorfun.api.model.Story;
@@ -144,6 +145,17 @@ public class Thorfun {
 
 	}
 
+	public void getSelfNeighbour(final ThorfunResult<Neighbour> result) {
+		jsonInvoke("http://thorfun.com/ajax/neighbour", METHOD_GET,
+		    new HashMap<String, String>(0), new BaseRemoteResult() {
+
+			    public void onResponse(JSONObject response) {
+				    result.onResponse(new Neighbour(response));
+			    };
+
+		    });
+	}
+
 	public void getStory(String id, final ThorfunResult<Story> result) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("id", id);
@@ -173,6 +185,35 @@ public class Thorfun {
 			map.put("skipView", String.format("%d", lastStory.getViewNumber()));
 		}
 		jsonInvoke("http://thorfun.com/ajax/home/story", METHOD_GET, map,
+		    new BaseRemoteResult() {
+
+			    public void onResponse(JSONArray responses) {
+
+				    ArrayList<CategoryStory> stories = new ArrayList<CategoryStory>(
+				        responses.length());
+				    for (int index = 0; index < responses.length(); index++) {
+					    JSONObject object = responses.optJSONObject(index);
+					    stories.add(new CategoryStory(object));
+				    }
+
+				    result.onResponse(new RemoteCollection<CategoryStory>(stories));
+			    }
+
+		    });
+
+	}
+
+	public void loadMyStory(CategoryStory lastStory, String username,
+	    final ThorfunResult<RemoteCollection<CategoryStory>> result) {
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("limit", "15");
+		map.put("username", username);
+		if (lastStory != null) {
+			map.put("skipId", lastStory.getID());
+			map.put("skip", String.format("%d", lastStory.getViewNumber()));
+		}
+		jsonInvoke("http://thorfun.com/ajax/neighbour/story", METHOD_GET, map,
 		    new BaseRemoteResult() {
 
 			    public void onResponse(JSONArray responses) {
