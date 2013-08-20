@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -31,7 +31,6 @@ public class MainView extends FragmentActivity {
 	public static final String PAGE_MAIN_LOGGEDIN = "main_loggedin";
 
 	private String mPage;
-	private SectionsPagerAdapter mSectionsPagerAdapter;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -41,10 +40,6 @@ public class MainView extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-		    getSupportFragmentManager(), Thorfun.getInstance(this));
-
 		showMain();
 	}
 
@@ -137,15 +132,14 @@ public class MainView extends FragmentActivity {
 		}
 
 		invalidateOptionsMenu();
-		mSectionsPagerAdapter.update();
 
 		// Set up the ViewPager with the sections adapter.
+		SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(
+		    getSupportFragmentManager(), Thorfun.getInstance(this));
+		
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		if (mViewPager.getAdapter() == null) {
-			mViewPager.setAdapter(mSectionsPagerAdapter);
-		}
-
-		mSectionsPagerAdapter.notifyDataSetChanged();
+		mViewPager.setAdapter(sectionsPagerAdapter);
+		sectionsPagerAdapter.notifyDataSetChanged();
 
 	}
 
@@ -165,58 +159,58 @@ public class MainView extends FragmentActivity {
 		});
 	}
 
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 		private static final String KEY_TITLE = "title";
 		private static final String KEY_FRAGMENT = "fragment";
 
 		private Thorfun mThorfun;
+
 		private ArrayList<HashMap<String, Object>> mOptions = new ArrayList<HashMap<String, Object>>(
 		    3);
 
 		public SectionsPagerAdapter(FragmentManager fm, Thorfun thorfun) {
 			super(fm);
 			mThorfun = thorfun;
-		}
-
-		public void update() {
+			
 			Locale l = Locale.getDefault();
 
 			mOptions.clear();
+			MyStoryFragment myStoryFragment = new MyStoryFragment();
 			HashMap<String, Object> myStory = new HashMap<String, Object>();
 			myStory.put(KEY_TITLE, getString(R.string.my_story_title).toUpperCase(l));
-			myStory.put(KEY_FRAGMENT, new MyStoryFragment());
+			myStory.put(KEY_FRAGMENT, myStoryFragment);
 
+			StoryFragment storyFragment = new StoryFragment();
 			HashMap<String, Object> story = new HashMap<String, Object>();
 			story.put(KEY_TITLE, getString(R.string.story_title).toUpperCase(l));
-			story.put(KEY_FRAGMENT, new StoryFragment());
+			story.put(KEY_FRAGMENT, storyFragment);
 
+			BoardFragment boardFragment = new BoardFragment();
 			HashMap<String, Object> board = new HashMap<String, Object>();
 			board.put(KEY_TITLE, getString(R.string.board_title).toUpperCase(l));
-			board.put(KEY_FRAGMENT, new BoardFragment());
+			board.put(KEY_FRAGMENT, boardFragment);
 
 			if (mThorfun.isLoggedIn()) {
 				mOptions.add(myStory);
 			}
 			mOptions.add(story);
 			mOptions.add(board);
+		}
 
-			this.notifyDataSetChanged();
+		public void update() {
+			
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			Fragment fragment = (Fragment) mOptions.get(position).get(KEY_FRAGMENT);
-			return fragment;
+			Log.d(Thorfun.LOG_TAG, "Get item: " + position);
+			return (Fragment) mOptions.get(position).get(KEY_FRAGMENT);
 		}
 
 		@Override
 		public int getCount() {
 			return mOptions.size();
-		}
-
-		public int getItemPosition(Object object) {
-			return mOptions.indexOf(object);
 		}
 
 		@Override

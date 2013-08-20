@@ -4,10 +4,6 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
-import th.in.llun.thorfun.api.Thorfun;
-
-import android.util.Log;
-
 public class CategoryStory extends JSONRemoteObject {
 
 	public static final String SORT_HOT = "hot";
@@ -21,8 +17,6 @@ public class CategoryStory extends JSONRemoteObject {
 
 	public CategoryStory(JSONObject raw) {
 		super(raw);
-
-		Log.d(Thorfun.LOG_TAG, raw.toString());
 	}
 
 	public String getID() {
