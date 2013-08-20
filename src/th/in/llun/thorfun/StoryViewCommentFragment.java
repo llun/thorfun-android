@@ -162,6 +162,10 @@ public class StoryViewCommentFragment extends Fragment {
 					row = (RelativeLayout) mInflater.inflate(
 					    R.layout.fragment_loading_row, parent, false);
 				}
+				
+				if (mComments.size() < 15) {
+					mIsLastPage = true;
+				}
 
 				final BaseAdapter self = this;
 

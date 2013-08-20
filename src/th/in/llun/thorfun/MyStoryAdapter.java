@@ -83,6 +83,10 @@ public class MyStoryAdapter extends BaseAdapter {
 				    parent, false);
 			}
 
+			if (mStories.size() < 10) {
+				mIsLastPage = true;
+			}
+			
 			final BaseAdapter self = this;
 
 			if (!mIsLoading && !mIsLastPage) {

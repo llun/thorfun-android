@@ -79,6 +79,10 @@ public class StoryAdapter extends BaseAdapter {
 				row = (RelativeLayout) mInflater.inflate(R.layout.fragment_loading_row,
 				    parent, false);
 			}
+			
+			if (mStories.size() < 10) {
+				mIsLastPage = true;
+			}
 
 			final BaseAdapter self = this;
 
