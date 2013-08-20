@@ -49,6 +49,8 @@ public class Thorfun {
 
 	public static final String LOG_TAG = "Thorfun";
 
+	public static final int DEFAULT_PAGE_LIMIT = 15;
+	
 	public static final String CONFIG_NAME = "thorfun.network";
 	public static final String CONFIG_KEY_COOKIES = "cookies";
 
@@ -179,7 +181,7 @@ public class Thorfun {
 		map.put("popular", "false");
 		map.put("editor_pick", "false");
 		map.put("sort", sort);
-		map.put("limit", "15");
+		map.put("limit", Integer.toString(DEFAULT_PAGE_LIMIT));
 		if (lastStory != null) {
 			map.put("skipId", lastStory.getID());
 			map.put("skipView", String.format("%d", lastStory.getViewNumber()));
@@ -207,7 +209,7 @@ public class Thorfun {
 	    final ThorfunResult<RemoteCollection<CategoryStory>> result) {
 
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("limit", "15");
+		map.put("limit", Integer.toString(DEFAULT_PAGE_LIMIT));
 		map.put("username", username);
 		if (lastStory != null) {
 			map.put("skipId", lastStory.getID());
@@ -238,7 +240,7 @@ public class Thorfun {
 		map.put("category_id", "all");
 		map.put("following", "false");
 		map.put("sort", "time");
-		map.put("limit", "20");
+		map.put("limit", Integer.toString(DEFAULT_PAGE_LIMIT));
 		if (lastPost != null) {
 			map.put("skipId", lastPost.getID());
 			map.put("skipComment", String.format("%d", lastPost.getTotalComment()));
@@ -294,7 +296,7 @@ public class Thorfun {
 	public void loadComments(CategoryStory story, Comment lastComment,
 	    final ThorfunResult<RemoteCollection<Comment>> result) {
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("limit", "10");
+		map.put("limit", Integer.toString(DEFAULT_PAGE_LIMIT));
 		map.put("id", story.getID());
 		if (lastComment != null) {
 			map.put("skipId", Integer.toString(lastComment.getID()));

@@ -163,7 +163,7 @@ public class StoryViewCommentFragment extends Fragment {
 					    R.layout.fragment_loading_row, parent, false);
 				}
 				
-				if (mComments.size() < 15) {
+				if (mComments.size() < Thorfun.DEFAULT_PAGE_LIMIT) {
 					mIsLastPage = true;
 				}
 

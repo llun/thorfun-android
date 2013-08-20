@@ -14,7 +14,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +114,10 @@ public class BoardFragment extends Fragment {
 					    R.layout.fragment_loading_row, parent, false);
 				}
 
+				if (posts.size() < Thorfun.DEFAULT_PAGE_LIMIT) {
+					isLastPage = true;
+				}
+
 				final BaseAdapter self = this;
 
 				if (!isLoading && !isLastPage) {
@@ -177,8 +180,6 @@ public class BoardFragment extends Fragment {
 
 				PrettyTime prettyTime = new PrettyTime();
 				TextView time = (TextView) row.findViewById(R.id.post_row_time_text);
-				Log.d(Thorfun.LOG_TAG, "Time: " + post.getTime());
-				Log.d(Thorfun.LOG_TAG, "Time: " + prettyTime.format(post.getTime()));
 				time.setText(prettyTime.format(post.getTime()));
 
 				return row;

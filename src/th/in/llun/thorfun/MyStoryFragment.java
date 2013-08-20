@@ -29,8 +29,8 @@ public class MyStoryFragment extends Fragment {
 		mAdapter = new MyStoryAdapter(getActivity(),
 		    getLayoutInflater(savedInstanceState));
 
-		View rootView = inflater.inflate(R.layout.fragment_story, container, false);
-		GridView grid = (GridView) rootView.findViewById(R.id.story_grid);
+		View rootView = inflater.inflate(R.layout.fragment_my_story, container, false);
+		GridView grid = (GridView) rootView.findViewById(R.id.my_story_grid);
 		grid.setAdapter(mAdapter);
 
 		return rootView;
@@ -42,7 +42,7 @@ public class MyStoryFragment extends Fragment {
 
 		final Activity activity = getActivity();
 		final RelativeLayout layout = (RelativeLayout) activity
-		    .findViewById(R.id.story_loading);
+		    .findViewById(R.id.my_story_loading);
 
 		Log.d(Thorfun.LOG_TAG, "Load story");
 		mThorfun.getSelfNeighbour(new ThorfunResult<Neighbour>() {

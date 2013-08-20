@@ -3,7 +3,7 @@
     android:id="@+id/story_comment_row"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/thorfun.story_comment_background"
+    android:background="@drawable/comment_row_background"
     android:padding="6dp" >
 
     <ImageView

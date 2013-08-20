@@ -83,7 +83,7 @@ public class MyStoryAdapter extends BaseAdapter {
 				    parent, false);
 			}
 
-			if (mStories.size() < 10) {
+			if (mStories.size() < Thorfun.DEFAULT_PAGE_LIMIT) {
 				mIsLastPage = true;
 			}
 			

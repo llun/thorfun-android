@@ -71,15 +71,4 @@ public class StoryFragment extends Fragment {
 		    });
 	}
 
-	public void onResume() {
-		super.onResume();
-		
-		Log.d(Thorfun.LOG_TAG, "Resume");
-	}
-	
-	public void onViewStateRestored(Bundle savedInstanceState)
-	{
-		super.onViewStateRestored(savedInstanceState);
-		Log.d(Thorfun.LOG_TAG, "Restore");
-	}
 }
