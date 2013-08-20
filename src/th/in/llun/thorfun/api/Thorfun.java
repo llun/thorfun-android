@@ -3,6 +3,7 @@ package th.in.llun.thorfun.api;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -324,6 +325,8 @@ public class Thorfun {
 	    final ThorfunResult<Comment> result) {
 		HashMap<String, String> map = new HashMap<String, String>(3);
 		map.put("id", story.getID());
+		map.put("text",  text);
+		map.put("t", Long.toString(new Date().getTime() * 1000));
 
 		jsonInvoke("http://thorfun.com/ajax/story/comment", METHOD_POST, map,
 		    new BaseRemoteResult() {

@@ -119,6 +119,7 @@ public class StoryViewCommentFragment extends Fragment {
 			    @Override
 			    public void onResponse(RemoteCollection<Comment> response) {
 				    List<Comment> comments = response.collection();
+				    mComments.clear();
 				    mComments.addAll(comments);
 				    mAdapter.notifyDataSetChanged();
 			    }
