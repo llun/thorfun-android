@@ -3,12 +3,13 @@
 
     <color name="thorfun.loading_background">#ffffff</color>
     <color name="thorfun.actionbar_background">#75c0ef</color>
-    <color name="thorfun.pagertitle_background">#e8f0f5</color>
-    <color name="thorfun.pagertitle_text_color">#2e5e8a</color>
+    <color name="thorfun.view_background">#ecf0f1</color>
+    <color name="thorfun.pagertitle_background">#2980b9</color>
+    <color name="thorfun.pagertitle_text_color">#ecf0f1</color>
     <color name="thorfun.story_row_background">#ffffff</color>
     <color name="thorfun.story_row_border">#d9e1e5</color>
-    <color name="thorfun.story_view_title_background">#e8f0f5</color>
-    <color name="thorfun.story_view_title_text_color">#2e5e8a</color>
+    <color name="thorfun.story_view_title_background">#3498db</color>
+    <color name="thorfun.story_view_title_text_color">#ecf0f1</color>
     <color name="thorfun.story_comment_background">#ffffff</color>
     <color name="thorfun.story_comment_border">#d9e1e5</color>
     <color name="thorfun.story_comment_header">#888888</color>

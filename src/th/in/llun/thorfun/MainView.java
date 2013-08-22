@@ -80,18 +80,6 @@ public class MainView extends FragmentActivity {
 		invalidateOptionsMenu();
 
 		final Activity activity = this;
-		Button cancelButton = (Button) findViewById(R.id.login_cancel_button);
-		cancelButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View view) {
-				InputMethodManager inputManager = (InputMethodManager) activity
-				    .getSystemService(Context.INPUT_METHOD_SERVICE);
-				inputManager.hideSoftInputFromWindow(activity.getCurrentFocus()
-				    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-				showMain();
-			}
-		});
 
 		final EditText username = (EditText) findViewById(R.id.login_username_field);
 		final EditText password = (EditText) findViewById(R.id.login_password_field);
@@ -120,6 +108,7 @@ public class MainView extends FragmentActivity {
 				    });
 			}
 		});
+		username.requestFocus();
 	}
 
 	private void showMain() {

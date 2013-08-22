@@ -7,7 +7,7 @@
         android:id="@+id/story_view_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/thorfun.pagertitle_background" >
+        android:background="@color/thorfun.story_view_title_background" >
 
         <TextView
             android:id="@+id/story_view_title"
@@ -29,6 +29,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="@string/loading"
+                android:textColor="@color/thorfun.story_view_title_text_color"
                 android:textSize="12sp" />
 
             <TextView
@@ -40,6 +41,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="@string/loading"
+                android:textColor="@color/thorfun.story_view_title_text_color"
                 android:textSize="12sp" />
 
             <TextView
@@ -51,6 +53,7 @@
                 android:drawableLeft="@drawable/ic_device_access_time"
                 android:gravity="center"
                 android:text="@string/loading"
+                android:textColor="@color/thorfun.story_view_title_text_color"
                 android:textSize="12sp" />
         </RelativeLayout>
     </RelativeLayout>

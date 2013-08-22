@@ -72,6 +72,10 @@ public class StoryView extends FragmentActivity {
 		TextView like = (TextView) findViewById(R.id.story_view_favorite_text);
 		TextView time = (TextView) findViewById(R.id.story_view_time_text);
 
+		applyFilterOverDrawable(username);
+		applyFilterOverDrawable(like);
+		applyFilterOverDrawable(time);
+		
 		titleView.setText(Html.fromHtml(mStory.getTitle()));
 		username.setText(mStory.getNeightbour().getName());
 		like.setText("" + mStory.getLikeNumber());
@@ -149,6 +153,15 @@ public class StoryView extends FragmentActivity {
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	private void applyFilterOverDrawable(TextView textView) {
+		Drawable drawables[] = textView.getCompoundDrawables();
+		for (Drawable drawable : drawables) {
+			if (drawable != null) {
+				drawable.setColorFilter(textView.getCurrentTextColor(), Mode.SRC_ATOP);
+			}
 		}
 	}
 
