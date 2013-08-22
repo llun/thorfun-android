@@ -136,7 +136,7 @@ public class MainView extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter.
 		SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(
 		    getSupportFragmentManager(), Thorfun.getInstance(this));
-		
+
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(sectionsPagerAdapter);
 		sectionsPagerAdapter.notifyDataSetChanged();
@@ -144,12 +144,21 @@ public class MainView extends FragmentActivity {
 	}
 
 	private void logout() {
+		final Activity self = this;
 		Thorfun.getInstance(this).logout(new ApiResponse<String>() {
 
 			@Override
 			public void onResponse(String result) {
 				mPage = PAGE_MAIN;
 				invalidateOptionsMenu();
+
+				// Set up the ViewPager with the sections adapter.
+				SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(
+				    getSupportFragmentManager(), Thorfun.getInstance(self));
+
+				mViewPager = (ViewPager) findViewById(R.id.pager);
+				mViewPager.setAdapter(sectionsPagerAdapter);
+				sectionsPagerAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -172,7 +181,7 @@ public class MainView extends FragmentActivity {
 		public SectionsPagerAdapter(FragmentManager fm, Thorfun thorfun) {
 			super(fm);
 			mThorfun = thorfun;
-			
+
 			Locale l = Locale.getDefault();
 
 			mOptions.clear();
@@ -199,7 +208,7 @@ public class MainView extends FragmentActivity {
 		}
 
 		public void update() {
-			
+
 		}
 
 		@Override
