@@ -59,12 +59,14 @@
         android:minHeight="60dp"
         android:text="@string/loading" />
 
-    <ListView
+    <LinearLayout
         android:id="@+id/story_comment_replies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/story_comment_text"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:orientation="vertical" >
+    </LinearLayout>
 
 </RelativeLayout>

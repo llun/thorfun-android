@@ -8,11 +8,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
 
-import th.in.llun.thorfun.adapter.ReplyAdapter;
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
 import th.in.llun.thorfun.api.model.Comment;
 import th.in.llun.thorfun.api.model.RemoteCollection;
+import th.in.llun.thorfun.api.model.Reply;
 import th.in.llun.thorfun.api.model.ThorfunResult;
 import th.in.llun.thorfun.utils.ImageLoader;
 import android.app.Activity;
@@ -29,6 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -248,13 +249,38 @@ public class StoryViewCommentFragment extends Fragment {
 				    .findViewById(R.id.story_comment_time);
 				timeText.setText(new PrettyTime().format(comment.getTime()));
 
-				ListView repliesView = (ListView) row
+				LinearLayout repliesView = (LinearLayout) row
 				    .findViewById(R.id.story_comment_replies);
-				repliesView.setAdapter(new ReplyAdapter(mInflater, comment.getReply()));
 				if (comment.getReply().size() == 0) {
 					repliesView.setVisibility(View.GONE);
 				} else {
 					repliesView.setVisibility(View.VISIBLE);
+					repliesView.removeAllViews();
+
+					for (Reply reply : comment.getReply()) {
+						View replyView = mInflater.inflate(
+						    R.layout.story_comment_reply_row, parent, false);
+						ImageView replyIcon = (ImageView) replyView
+						    .findViewById(R.id.story_comment_avatar);
+						ViewGroup replyIconLoading = (ViewGroup) replyView
+						    .findViewById(R.id.story_comment_progress_box);
+						replyIconLoading.setVisibility(View.VISIBLE);
+						new ImageLoader(replyIcon, replyIconLoading).execute(reply
+						    .getNeightbour().getImageURL());
+
+						TextView replyUsernameText = (TextView) replyView
+						    .findViewById(R.id.story_comment_user);
+						replyUsernameText.setText(reply.getNeightbour().getName());
+
+						TextView replyCommentText = (TextView) replyView
+						    .findViewById(R.id.story_comment_text);
+						replyCommentText.setText(Html.fromHtml(reply.getText()));
+
+						TextView replyTimeText = (TextView) replyView
+						    .findViewById(R.id.story_comment_time);
+						replyTimeText.setText(new PrettyTime().format(reply.getTime()));
+						repliesView.addView(replyView);
+					}
 				}
 
 				if (Thorfun.getInstance(mActivity).isLoggedIn()) {

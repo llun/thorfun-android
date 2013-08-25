@@ -68,7 +68,7 @@
         android:id="@+id/comment_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/story_reply_field"
+        android:layout_above="@+id/comment_reply_field"
         android:layout_below="@+id/comment_information" >
     </ListView>
 
