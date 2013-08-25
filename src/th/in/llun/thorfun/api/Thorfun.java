@@ -143,14 +143,16 @@ public class Thorfun {
 		    new BaseRemoteResult() {
 
 			    public void onResponse(final String token) {
-				    String cookies = saveCookieStore(mCookieStore);
-				    SharedPreferences preference = mContext.getSharedPreferences(
-				        CONFIG_NAME, Context.MODE_PRIVATE);
-				    Editor editor = preference.edit();
-				    editor.putString(CONFIG_KEY_COOKIES, cookies);
-				    editor.commit();
+			    	if (!token.equals("false")) {
+			    		String cookies = saveCookieStore(mCookieStore);
+					    SharedPreferences preference = mContext.getSharedPreferences(
+					        CONFIG_NAME, Context.MODE_PRIVATE);
+					    Editor editor = preference.edit();
+					    editor.putString(CONFIG_KEY_COOKIES, cookies);
+					    editor.commit();
 
-				    mIsLoggedIn = true;
+					    mIsLoggedIn = true;
+			    	}
 				    result.onResponse(token);
 			    }
 

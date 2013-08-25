@@ -102,7 +102,14 @@ public class MainView extends FragmentActivity {
 						    } catch (Exception e) {
 						    	Log.e(Thorfun.LOG_TAG, "Can't hide keybaord", e);
 						    }
-						    showMain();
+						    View errorMessage = activity.findViewById(R.id.login_error_message);
+						    if (result.equals("false")) {
+						    	errorMessage.setVisibility(View.VISIBLE);
+						    }
+						    else {
+						    	errorMessage.setVisibility(View.GONE);
+						    	showMain();
+						    }
 					    }
 
 					    @Override

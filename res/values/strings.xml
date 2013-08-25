@@ -8,7 +8,7 @@
     <string name="login_username_hint">Username</string>
     <string name="login_password_hint">Password</string>
     <string name="login_submit_button">Login</string>
-    <string name="login_cancel_button">Cancel</string>
+    <string name="login_error_message">Wrong username or password</string>
     <string name="my_story_title">My Story</string>
     <string name="story_title">Story</string>
     <string name="story_row_image">Story Image</string>

@@ -6,6 +6,7 @@
     <color name="thorfun.view_background">#ecf0f1</color>
     <color name="thorfun.pagertitle_background">#2980b9</color>
     <color name="thorfun.pagertitle_text_color">#ecf0f1</color>
+    <color name="thorfun.login_error_message">#ff0000</color>
     <color name="thorfun.story_row_background">#ffffff</color>
     <color name="thorfun.story_row_border">#d9e1e5</color>
     <color name="thorfun.story_view_title_background">#3498db</color>
