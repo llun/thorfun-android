@@ -48,6 +48,7 @@ import th.in.llun.thorfun.api.model.Comment;
 import th.in.llun.thorfun.api.model.Neighbour;
 import th.in.llun.thorfun.api.model.Post;
 import th.in.llun.thorfun.api.model.RemoteCollection;
+import th.in.llun.thorfun.api.model.Reply;
 import th.in.llun.thorfun.api.model.Story;
 import th.in.llun.thorfun.api.model.ThorfunResult;
 import android.content.Context;
@@ -143,8 +144,8 @@ public class Thorfun {
 		    new BaseRemoteResult() {
 
 			    public void onResponse(final String token) {
-			    	if (!token.equals("false")) {
-			    		String cookies = saveCookieStore(mCookieStore);
+				    if (!token.equals("false")) {
+					    String cookies = saveCookieStore(mCookieStore);
 					    SharedPreferences preference = mContext.getSharedPreferences(
 					        CONFIG_NAME, Context.MODE_PRIVATE);
 					    Editor editor = preference.edit();
@@ -152,7 +153,7 @@ public class Thorfun {
 					    editor.commit();
 
 					    mIsLoggedIn = true;
-			    	}
+				    }
 				    result.onResponse(token);
 			    }
 
@@ -322,6 +323,23 @@ public class Thorfun {
 				    result.onResponse(response);
 			    }
 
+		    });
+	}
+
+	public void replyComment(String storyID, Comment comment, String text,
+	    final ThorfunResult<Reply> result) {
+		HashMap<String, String> map = new HashMap<String, String>(3);
+		map.put("id", storyID);
+		map.put("comment_id", Integer.toString(comment.getID()));
+		map.put("text", text);
+		map.put("t", Long.toString(new Date().getTime() * 1000));
+
+		jsonInvoke("http://thorfun.com/ajax/story/reply", METHOD_POST, map,
+		    new BaseRemoteResult() {
+
+			    public void onResponse(JSONObject response) {
+				    result.onResponse(new Reply(response));
+			    }
 		    });
 	}
 

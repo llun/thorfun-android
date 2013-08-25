@@ -2,6 +2,99 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
+    <RelativeLayout
+        android:id="@+id/comment_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/comment_row_background"
+        android:padding="5dp" >
+
+        <ImageView
+            android:id="@+id/comment_avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="6dp"
+            android:contentDescription="@string/story_comment_avartar" />
+
+        <RelativeLayout
+            android:id="@+id/comment_avatar_progress_box"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignBottom="@id/comment_avatar"
+            android:layout_alignLeft="@id/comment_avatar"
+            android:layout_alignRight="@id/comment_avatar"
+            android:layout_alignTop="@id/comment_avatar"
+            android:background="@color/thorfun.loading_background" >
+
+            <ProgressBar
+                android:id="@+id/comment_avatar_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/comment_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_toLeftOf="@+id/comment_time"
+            android:layout_toRightOf="@+id/comment_avatar"
+            android:text="@string/loading"
+            android:textColor="@color/thorfun.story_comment_header"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/comment_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/loading"
+            android:textColor="@color/thorfun.story_comment_header" />
+
+        <TextView
+            android:id="@+id/comment_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/comment_user"
+            android:layout_below="@+id/comment_user"
+            android:minHeight="60dp"
+            android:text="@string/loading" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/comment_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/story_reply_field"
+        android:layout_below="@+id/comment_information" >
+    </ListView>
+
+    <RelativeLayout
+        android:id="@+id/comment_reply_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <EditText
+            android:id="@+id/comment_reply_input_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/comment_reply_submit"
+            android:ems="10"
+            android:inputType="textMultiLine" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/comment_reply_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/story_comment_reply_submit" />
+    </RelativeLayout>
 
 </RelativeLayout>
