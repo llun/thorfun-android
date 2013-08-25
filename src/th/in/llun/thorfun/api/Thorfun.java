@@ -12,7 +12,9 @@ import java.util.concurrent.Executors;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -21,11 +23,21 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.json.JSONArray;
@@ -51,7 +63,7 @@ public class Thorfun {
 	public static final String LOG_TAG = "Thorfun";
 
 	public static final int DEFAULT_PAGE_LIMIT = 15;
-	
+
 	public static final String CONFIG_NAME = "thorfun.network";
 	public static final String CONFIG_KEY_COOKIES = "cookies";
 
@@ -79,9 +91,27 @@ public class Thorfun {
 	}
 
 	public Thorfun(Context context) {
+		HttpParams params = new BasicHttpParams();
+		ConnManagerParams.setMaxTotalConnections(params, 100);
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+
+		// Create and initialize scheme registry
+		SchemeRegistry schemeRegistry = new SchemeRegistry();
+		schemeRegistry.register(new Scheme("http", PlainSocketFactory
+		    .getSocketFactory(), 80));
+		schemeRegistry.register(new Scheme("https", SSLSocketFactory
+		    .getSocketFactory(), 443));
+
+		// Create an HttpClient with the ThreadSafeClientConnManager.
+		// This connection manager must be used if more than one thread will
+		// be using the HttpClient.
+		ClientConnectionManager cm = new ThreadSafeClientConnManager(params,
+		    schemeRegistry);
+		mClient = new DefaultHttpClient(cm, params);
+
 		mContext = context;
 		mExecutor = Executors.newSingleThreadExecutor();
-		mClient = new DefaultHttpClient();
+
 		mClientContext = new BasicHttpContext();
 
 		SharedPreferences preference = mContext.getSharedPreferences(CONFIG_NAME,
@@ -325,7 +355,7 @@ public class Thorfun {
 	    final ThorfunResult<Comment> result) {
 		HashMap<String, String> map = new HashMap<String, String>(3);
 		map.put("id", story.getID());
-		map.put("text",  text);
+		map.put("text", text);
 		map.put("t", Long.toString(new Date().getTime() * 1000));
 
 		jsonInvoke("http://thorfun.com/ajax/story/comment", METHOD_POST, map,
@@ -411,24 +441,25 @@ public class Thorfun {
 				try {
 					HttpResponse response = mClient.execute(finalRequest, mClientContext);
 					HttpEntity entity = response.getEntity();
+					if (entity != null) {
+						ByteArrayOutputStream baos = new ByteArrayOutputStream();
+						entity.writeTo(baos);
+						final String output = baos.toString();
+						Log.v(LOG_TAG, output);
 
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					entity.writeTo(baos);
-					final String output = baos.toString();
-					Log.v(LOG_TAG, output);
+						Handler handler = new Handler(mContext.getMainLooper());
+						handler.post(new Runnable() {
 
-					Handler handler = new Handler(mContext.getMainLooper());
-					handler.post(new Runnable() {
-
-						@Override
-						public void run() {
-							try {
-								result.onResponse(output);
-							} catch (Exception e) {
-								Log.e(LOG_TAG, e.getMessage(), e);
+							@Override
+							public void run() {
+								try {
+									result.onResponse(output);
+								} catch (Exception e) {
+									Log.e(LOG_TAG, e.getMessage(), e);
+								}
 							}
-						}
-					});
+						});
+					}
 
 				} catch (Exception e) {
 					Log.e(LOG_TAG, e.getMessage(), e);
