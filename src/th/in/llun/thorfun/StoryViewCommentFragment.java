@@ -70,7 +70,7 @@ public class StoryViewCommentFragment extends Fragment {
 
 			final EditText commentField = (EditText) commentBox
 			    .findViewById(R.id.story_comment_input_text);
-			Button commentButton = (Button) commentBox
+			final Button commentButton = (Button) commentBox
 			    .findViewById(R.id.story_comment_submit);
 			commentButton.setOnClickListener(new OnClickListener() {
 
@@ -78,12 +78,14 @@ public class StoryViewCommentFragment extends Fragment {
 				public void onClick(View v) {
 					String input = commentField.getText().toString();
 					commentField.setText("");
+					commentButton.setEnabled(false);
 
 					mThorfun.comment(mStory, input, new ThorfunResult<Comment>() {
 
 						@Override
 						public void onResponse(Comment response) {
 							reloadComment();
+							commentButton.setEnabled(true);
 						}
 					});
 				}
@@ -119,9 +121,20 @@ public class StoryViewCommentFragment extends Fragment {
 			    @Override
 			    public void onResponse(RemoteCollection<Comment> response) {
 				    List<Comment> comments = response.collection();
-				    mComments.clear();
-				    mComments.addAll(comments);
-				    mAdapter.notifyDataSetChanged();
+				    if (comments.size() > 0) {
+				    	mComments.clear();
+					    mComments.addAll(comments);
+					    mAdapter.notifyDataSetChanged();				    	
+				    }
+				    else {
+				    	Activity activity = getActivity();
+				    	View emptyView = activity.findViewById(R.id.story_comment_empty);
+				    	emptyView.setVisibility(View.VISIBLE);
+				    	
+				    	View listView = activity.findViewById(R.id.story_comment_list);
+				    	listView.setVisibility(View.INVISIBLE);
+				    	
+				    }
 			    }
 		    });
 	}

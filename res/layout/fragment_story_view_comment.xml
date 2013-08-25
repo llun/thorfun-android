@@ -3,6 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/story_comment_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+        <TextView android:id="@+id/story_comment_empty_label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:text="@string/story_comment_empty"/>
+        
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/story_comment_list"
