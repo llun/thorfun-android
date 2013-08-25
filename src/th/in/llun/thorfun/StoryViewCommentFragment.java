@@ -16,6 +16,7 @@ import th.in.llun.thorfun.api.model.Reply;
 import th.in.llun.thorfun.api.model.ThorfunResult;
 import th.in.llun.thorfun.utils.ImageLoader;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -122,18 +123,17 @@ public class StoryViewCommentFragment extends Fragment {
 			    public void onResponse(RemoteCollection<Comment> response) {
 				    List<Comment> comments = response.collection();
 				    if (comments.size() > 0) {
-				    	mComments.clear();
+					    mComments.clear();
 					    mComments.addAll(comments);
-					    mAdapter.notifyDataSetChanged();				    	
-				    }
-				    else {
-				    	Activity activity = getActivity();
-				    	View emptyView = activity.findViewById(R.id.story_comment_empty);
-				    	emptyView.setVisibility(View.VISIBLE);
-				    	
-				    	View listView = activity.findViewById(R.id.story_comment_list);
-				    	listView.setVisibility(View.INVISIBLE);
-				    	
+					    mAdapter.notifyDataSetChanged();
+				    } else {
+					    Activity activity = getActivity();
+					    View emptyView = activity.findViewById(R.id.story_comment_empty);
+					    emptyView.setVisibility(View.VISIBLE);
+
+					    View listView = activity.findViewById(R.id.story_comment_list);
+					    listView.setVisibility(View.INVISIBLE);
+
 				    }
 			    }
 		    });
@@ -176,7 +176,7 @@ public class StoryViewCommentFragment extends Fragment {
 					row = (RelativeLayout) mInflater.inflate(
 					    R.layout.fragment_loading_row, parent, false);
 				}
-				
+
 				if (mComments.size() < Thorfun.DEFAULT_PAGE_LIMIT) {
 					mIsLastPage = true;
 				}
@@ -221,7 +221,7 @@ public class StoryViewCommentFragment extends Fragment {
 					row = mInflater.inflate(R.layout.story_comment_row, parent, false);
 				}
 
-				Comment comment = mComments.get(position);
+				final Comment comment = mComments.get(position);
 
 				ImageView icon = (ImageView) row
 				    .findViewById(R.id.story_comment_avatar);
@@ -251,6 +251,17 @@ public class StoryViewCommentFragment extends Fragment {
 				} else {
 					repliesView.setVisibility(View.VISIBLE);
 				}
+
+				row.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(mActivity, CommentRepliesActivity.class);
+						intent.putExtra(CommentRepliesActivity.KEY_COMMENT,
+						    comment.rawString());
+						mActivity.startActivity(intent);
+					}
+				});
 
 				return row;
 			}

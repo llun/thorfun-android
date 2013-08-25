@@ -50,6 +50,8 @@ public class StoryView extends FragmentActivity {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		setTitle(getString(R.string.story_title));
+
 		Intent intent = getIntent();
 		String json = intent.getStringExtra(KEY_STORY);
 		try {
@@ -75,7 +77,7 @@ public class StoryView extends FragmentActivity {
 		applyFilterOverDrawable(username);
 		applyFilterOverDrawable(like);
 		applyFilterOverDrawable(time);
-		
+
 		titleView.setText(Html.fromHtml(mStory.getTitle()));
 		username.setText(mStory.getNeightbour().getName());
 		like.setText("" + mStory.getLikeNumber());
@@ -155,7 +157,7 @@ public class StoryView extends FragmentActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private void applyFilterOverDrawable(TextView textView) {
 		Drawable drawables[] = textView.getCompoundDrawables();
 		for (Drawable drawable : drawables) {

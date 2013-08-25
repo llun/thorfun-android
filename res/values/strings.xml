@@ -25,5 +25,6 @@
     <string name="browser_back">Back</string>
     <string name="browser_forward">Forward</string>
     <string name="browser_share">Share</string>
+    <string name="story_comment_reply_title">Replies</string>
 
 </resources>

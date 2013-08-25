@@ -93,10 +93,15 @@ public class MainView extends FragmentActivity {
 
 					    @Override
 					    public void onResponse(String result) {
-						    InputMethodManager inputManager = (InputMethodManager) activity
-						        .getSystemService(Context.INPUT_METHOD_SERVICE);
-						    inputManager.hideSoftInputFromWindow(activity.getCurrentFocus()
-						        .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+						    try {
+							    InputMethodManager inputManager = (InputMethodManager) activity
+							        .getSystemService(Context.INPUT_METHOD_SERVICE);
+							    inputManager.hideSoftInputFromWindow(activity
+							        .getCurrentFocus().getWindowToken(),
+							        InputMethodManager.HIDE_NOT_ALWAYS);
+						    } catch (Exception e) {
+						    	Log.e(Thorfun.LOG_TAG, "Can't hide keybaord", e);
+						    }
 						    showMain();
 					    }
 
