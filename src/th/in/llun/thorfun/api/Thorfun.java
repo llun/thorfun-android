@@ -429,6 +429,23 @@ public class Thorfun {
 		    });
 	}
 
+	public void commentPost(Post post, String text,
+	    final ThorfunResult<Reply> result) {
+		HashMap<String, String> map = new HashMap<String, String>(3);
+		map.put("id", post.getID());
+		map.put("text", text);
+		map.put("t", Long.toString(new Date().getTime() * 1000));
+
+		jsonInvoke("http://thorfun.com/ajax/forum/comment", METHOD_POST, map,
+		    new BaseRemoteResult() {
+
+			    @Override
+			    public void onResponse(JSONObject response) throws Exception {
+				    result.onResponse(new Reply(response));
+			    }
+		    });
+	}
+
 	private void jsonInvoke(final String url, String method,
 	    Map<String, String> parameters, final RemoteResult result) {
 

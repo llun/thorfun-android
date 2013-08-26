@@ -24,6 +24,7 @@
     <string name="board_post_comment">{number} comment(s)</string>
     <string name="board_post_submit">Post</string>
     <string name="board_post_title">Post</string>
+    <string name="board_post_reply_submit">Comment</string>
     <string name="browser_back">Back</string>
     <string name="browser_forward">Forward</string>
     <string name="browser_share">Share</string>

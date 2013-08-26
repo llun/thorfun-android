@@ -21,8 +21,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -32,6 +35,9 @@ public class PostActivity extends Activity {
 
 	public static final String KEY_POST = "post";
 
+	private Thorfun mThorfun;
+
+	private Post mPost;
 	private List<Reply> mReplies;
 	private ReplyAdapter mAdapter;
 
@@ -46,29 +52,30 @@ public class PostActivity extends Activity {
 
 		String rawPost = getIntent().getStringExtra(KEY_POST);
 		try {
-			Post post = new Post(new JSONObject(rawPost));
+			mPost = new Post(new JSONObject(rawPost));
 
 			ImageView icon = (ImageView) findViewById(R.id.board_post_avatar);
 			ViewGroup loading = (ViewGroup) findViewById(R.id.board_post_loading);
 			loading.setVisibility(View.VISIBLE);
-			new ImageLoader(icon, loading)
-			    .execute(post.getNeightbour().getImageURL());
+			new ImageLoader(icon, loading).execute(mPost.getNeightbour()
+			    .getImageURL());
 
 			TextView title = (TextView) findViewById(R.id.board_post_title);
-			title.setText(Html.fromHtml(post.getTitle()));
+			title.setText(Html.fromHtml(mPost.getTitle()));
 
 			TextView username = (TextView) findViewById(R.id.board_post_username_text);
-			username.setText(post.getNeightbour().getName());
+			username.setText(mPost.getNeightbour().getName());
 
 			PrettyTime prettyTime = new PrettyTime();
 			TextView time = (TextView) findViewById(R.id.board_post_timestamp);
-			time.setText(prettyTime.format(post.getTime()));
+			time.setText(prettyTime.format(mPost.getTime()));
 
+			mThorfun = Thorfun.getInstance(this);
 			mReplies = new ArrayList<Reply>();
-			mAdapter = new ReplyAdapter(this, getLayoutInflater(), post, mReplies);
+			mAdapter = new ReplyAdapter(this, getLayoutInflater(), mPost, mReplies);
 			ListView repliesView = (ListView) findViewById(R.id.board_post_replies);
 			repliesView.setAdapter(mAdapter);
-			Thorfun.getInstance(this).loadPostReplies(post, null,
+			mThorfun.loadPostReplies(mPost, null,
 			    new ThorfunResult<RemoteCollection<Reply>>() {
 
 				    @Override
@@ -77,6 +84,37 @@ public class PostActivity extends Activity {
 					    mAdapter.notifyDataSetChanged();
 				    }
 			    });
+
+			View inputView = findViewById(R.id.board_post_reply_field);
+			if (mThorfun.isLoggedIn()) {
+				inputView.setVisibility(View.VISIBLE);
+			} else {
+				inputView.setVisibility(View.GONE);
+			}
+
+			final EditText inputField = (EditText) findViewById(R.id.board_post_reply_input);
+			final Button inputButton = (Button) findViewById(R.id.board_post_reply_submit);
+			inputButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					String text = inputField.getText().toString().trim();
+					if (text.length() > 0) {
+						inputField.setText("");
+						inputButton.setEnabled(false);
+						mThorfun.commentPost(mPost, text, new ThorfunResult<Reply>() {
+
+							@Override
+							public void onResponse(Reply response) {
+								inputButton.setEnabled(true);
+								mReplies.add(response);
+								mAdapter.notifyDataSetChanged();
+							}
+
+						});
+					}
+				}
+			});
 
 		} catch (JSONException e) {
 			Log.e(Thorfun.LOG_TAG, "Can't parse post json", e);

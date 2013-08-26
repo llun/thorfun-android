@@ -79,7 +79,32 @@
         android:id="@+id/board_post_replies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/board_post" >
+        android:layout_above="@+id/board_post_reply_field"
+        android:layout_below="@+id/board_post"
+        android:divider="@null"
+        android:dividerHeight="1dp" >
     </ListView>
+
+    <RelativeLayout
+        android:id="@+id/board_post_reply_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" >
+
+        <EditText
+            android:id="@+id/board_post_reply_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/board_post_reply_submit"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/board_post_reply_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/board_post_reply_submit" />
+    </RelativeLayout>
 
 </RelativeLayout>
