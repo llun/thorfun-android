@@ -1,6 +1,6 @@
 package th.in.llun.thorfun;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -41,7 +41,7 @@ public class StoryViewCommentFragment extends Fragment {
 	private Thorfun mThorfun;
 	private CategoryStory mStory;
 
-	private LinkedList<Comment> mComments;
+	private List<Comment> mComments;
 	private CommentAdapter mAdapter;
 
 	@Override
@@ -59,7 +59,7 @@ public class StoryViewCommentFragment extends Fragment {
 			    .findViewById(R.id.story_comment_list);
 
 			mThorfun = Thorfun.getInstance(getActivity());
-			mComments = new LinkedList<Comment>();
+			mComments = new ArrayList<Comment>();
 			mAdapter = new CommentAdapter(getActivity(), inflater, mStory, mComments);
 			commentList.setAdapter(mAdapter);
 

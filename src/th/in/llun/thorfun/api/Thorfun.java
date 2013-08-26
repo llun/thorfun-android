@@ -297,6 +297,32 @@ public class Thorfun {
 		    });
 	}
 
+	public void loadPostReplies(Post post, Reply lastReply,
+	    final ThorfunResult<RemoteCollection<Reply>> result) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("limit", Integer.toString(DEFAULT_PAGE_LIMIT));
+		map.put("id", post.getID());
+		if (lastReply != null) {
+			map.put("skipId", Integer.toString(lastReply.getID()));
+		}
+
+		jsonInvoke("http://thorfun.com/ajax/forum/comment_before", METHOD_GET, map,
+		    new BaseRemoteResult() {
+
+			    @Override
+			    public void onResponse(JSONArray responses) throws Exception {
+				    ArrayList<Reply> replies = new ArrayList<Reply>(responses.length());
+				    for (int index = 0; index < responses.length(); index++) {
+					    JSONObject object = responses.optJSONObject(index);
+					    replies.add(new Reply(object));
+				    }
+
+				    result.onResponse(new RemoteCollection<Reply>(replies));
+			    }
+
+		    });
+	}
+
 	public void like(String storyID, final ApiResponse<String> result) {
 		HashMap<String, String> map = new HashMap<String, String>(1);
 		map.put("id", storyID);
