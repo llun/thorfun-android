@@ -11,11 +11,13 @@ import th.in.llun.thorfun.api.model.RemoteCollection;
 import th.in.llun.thorfun.api.model.ThorfunResult;
 import th.in.llun.thorfun.utils.ImageLoader;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -61,35 +63,35 @@ public class BoardFragment extends Fragment {
 
 	private static class BoardAdapter extends BaseAdapter {
 
-		final private List<Post> posts = new ArrayList<Post>(0);
-		private LayoutInflater inflater = null;
-		private Activity activity = null;
+		final private List<Post> mPosts = new ArrayList<Post>(0);
+		private LayoutInflater mInflater = null;
+		private Activity mActivity = null;
 
 		private boolean isLoading = false;
 		private boolean isLastPage = false;
 
 		public BoardAdapter(Activity activity, LayoutInflater inflater) {
-			this.activity = activity;
-			this.inflater = inflater;
+			mActivity = activity;
+			mInflater = inflater;
 		}
 
 		public void setPosts(List<Post> posts) {
-			this.posts.clear();
-			this.posts.addAll(posts);
-			this.notifyDataSetChanged();
+			mPosts.clear();
+			mPosts.addAll(posts);
+			notifyDataSetChanged();
 		}
 
 		@Override
 		public int getCount() {
-			if (posts.size() > 0) {
-				return posts.size() + 2;
+			if (mPosts.size() > 0) {
+				return mPosts.size() + 2;
 			}
 			return 0;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return posts.get(position - 1);
+			return mPosts.get(position - 1);
 		}
 
 		@Override
@@ -110,11 +112,11 @@ public class BoardFragment extends Fragment {
 			else if (position == getCount() - 1) {
 				RelativeLayout row = (RelativeLayout) convertView;
 				if (row == null) {
-					row = (RelativeLayout) inflater.inflate(
+					row = (RelativeLayout) mInflater.inflate(
 					    R.layout.fragment_loading_row, parent, false);
 				}
 
-				if (posts.size() < Thorfun.DEFAULT_PAGE_LIMIT) {
+				if (mPosts.size() < Thorfun.DEFAULT_PAGE_LIMIT) {
 					isLastPage = true;
 				}
 
@@ -122,8 +124,8 @@ public class BoardFragment extends Fragment {
 
 				if (!isLoading && !isLastPage) {
 					isLoading = true;
-					Post post = posts.get(posts.size() - 1);
-					Thorfun.getInstance(activity).loadBoard(post,
+					Post post = mPosts.get(mPosts.size() - 1);
+					Thorfun.getInstance(mActivity).loadBoard(post,
 					    new ThorfunResult<RemoteCollection<Post>>() {
 
 						    @Override
@@ -132,7 +134,7 @@ public class BoardFragment extends Fragment {
 
 							    List<Post> next = response.collection();
 							    if (next.size() > 0) {
-								    posts.addAll(next);
+								    mPosts.addAll(next);
 								    self.notifyDataSetChanged();
 							    } else {
 								    isLastPage = true;
@@ -152,11 +154,11 @@ public class BoardFragment extends Fragment {
 			else {
 				RelativeLayout row = (RelativeLayout) convertView;
 				if (row == null) {
-					row = (RelativeLayout) inflater.inflate(R.layout.fragment_post_row,
+					row = (RelativeLayout) mInflater.inflate(R.layout.fragment_post_row,
 					    parent, false);
 				}
 
-				Post post = posts.get(position - 1);
+				final Post post = mPosts.get(position - 1);
 
 				ImageView icon = (ImageView) row.findViewById(R.id.post_row_avatar);
 				ViewGroup loading = (ViewGroup) row.findViewById(R.id.post_row_loading);
@@ -173,7 +175,7 @@ public class BoardFragment extends Fragment {
 
 				TextView comment = (TextView) row
 				    .findViewById(R.id.post_row_comment_text);
-				String commentTemplate = activity
+				String commentTemplate = mActivity
 				    .getString(R.string.board_post_comment);
 				comment.setText(commentTemplate.replace("{number}",
 				    String.format("%s", post.getTotalComment())));
@@ -181,6 +183,16 @@ public class BoardFragment extends Fragment {
 				PrettyTime prettyTime = new PrettyTime();
 				TextView time = (TextView) row.findViewById(R.id.post_row_time_text);
 				time.setText(prettyTime.format(post.getTime()));
+
+				row.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(mActivity, PostActivity.class);
+						intent.putExtra(PostActivity.KEY_POST, post.rawString());
+						mActivity.startActivity(intent);
+					}
+				});
 
 				return row;
 			}
