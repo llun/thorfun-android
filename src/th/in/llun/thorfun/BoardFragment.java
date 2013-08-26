@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,19 +29,58 @@ import android.widget.TextView;
 
 public class BoardFragment extends Fragment {
 
-	private Thorfun thorfun;
-	private BoardAdapter adapter;
+	private Thorfun mThorfun;
+	private BoardAdapter mAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
-		thorfun = Thorfun.getInstance(getActivity());
-		adapter = new BoardAdapter(getActivity(),
+		mThorfun = Thorfun.getInstance(getActivity());
+		mAdapter = new BoardAdapter(getActivity(),
 		    getLayoutInflater(savedInstanceState));
 
 		View rootView = inflater.inflate(R.layout.fragment_board, container, false);
 		GridView grid = (GridView) rootView.findViewById(R.id.post_grid);
-		grid.setAdapter(adapter);
+		grid.setAdapter(mAdapter);
+
+		View inputView = rootView.findViewById(R.id.post_field);
+		if (mThorfun.isLoggedIn()) {
+			inputView.setVisibility(View.VISIBLE);
+		} else {
+			inputView.setVisibility(View.GONE);
+		}
+
+		final EditText inputField = (EditText) inputView
+		    .findViewById(R.id.post_field_input);
+		final Button submitButton = (Button) inputView
+		    .findViewById(R.id.post_field_submit);
+		submitButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String title = inputField.getText().toString().trim();
+				if (title.length() > 0) {
+					inputField.setText("");
+					submitButton.setEnabled(false);
+					mThorfun.postBoard(title, new ThorfunResult<Post>() {
+
+						@Override
+						public void onResponse(Post response) {
+							mThorfun.loadBoard(null,
+							    new ThorfunResult<RemoteCollection<Post>>() {
+
+								    @Override
+								    public void onResponse(final RemoteCollection<Post> response) {
+									    submitButton.setEnabled(true);
+									    mAdapter.setPosts(response.collection());
+								    }
+							    });
+						}
+
+					});
+				}
+			}
+		});
 
 		return rootView;
 	}
@@ -51,12 +92,12 @@ public class BoardFragment extends Fragment {
 		final RelativeLayout layout = (RelativeLayout) activity
 		    .findViewById(R.id.post_loading);
 
-		thorfun.loadBoard(null, new ThorfunResult<RemoteCollection<Post>>() {
+		mThorfun.loadBoard(null, new ThorfunResult<RemoteCollection<Post>>() {
 
 			@Override
 			public void onResponse(final RemoteCollection<Post> response) {
 				layout.setVisibility(View.GONE);
-				adapter.setPosts(response.collection());
+				mAdapter.setPosts(response.collection());
 			}
 		});
 	}
