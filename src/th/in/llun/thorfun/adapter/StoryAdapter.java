@@ -47,6 +47,10 @@ public class StoryAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
+	public List<CategoryStory> getStories() {
+		return mStories;
+	}
+
 	@Override
 	public int getCount() {
 		if (mStories.size() > 0) {
@@ -81,7 +85,7 @@ public class StoryAdapter extends BaseAdapter {
 				row = (RelativeLayout) mInflater.inflate(R.layout.fragment_loading_row,
 				    parent, false);
 			}
-			
+
 			if (mStories.size() < Thorfun.DEFAULT_PAGE_LIMIT) {
 				mIsLastPage = true;
 			}
@@ -182,4 +186,5 @@ public class StoryAdapter extends BaseAdapter {
 		}
 		return 2;
 	}
+
 }
