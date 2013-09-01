@@ -6,5 +6,11 @@
             <solid android:color="@color/thorfun.actionbar_background" />
         </shape>
     </item>
+    
+    <item>
+        <bitmap
+            android:src="@drawable/noise"
+            android:tileMode="repeat" />
+    </item>
 
 </layer-list>

@@ -2,13 +2,13 @@ package th.in.llun.thorfun;
 
 import java.util.List;
 
+import th.in.llun.thorfun.adapter.StoryAdapter;
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
 import th.in.llun.thorfun.api.model.RemoteCollection;
 import th.in.llun.thorfun.api.model.ThorfunResult;
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 
-public class StoryFragment extends Fragment {
+import com.actionbarsherlock.app.SherlockFragment;
+
+public class StoryFragment extends SherlockFragment {
 
 	private Thorfun mThorfun;
 	private StoryAdapter mAdapter;

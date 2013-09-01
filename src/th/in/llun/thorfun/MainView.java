@@ -10,21 +10,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class MainView extends FragmentActivity {
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+public class MainView extends SherlockFragmentActivity {
 
 	public static final String PAGE_MAIN = "main";
 	public static final String PAGE_LOGIN = "login";
@@ -38,19 +39,19 @@ public class MainView extends FragmentActivity {
 	ViewPager mViewPager;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
 		showMain();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (mPage == PAGE_MAIN) {
-			MenuInflater inflater = getMenuInflater();
+			MenuInflater inflater = getSupportMenuInflater();
 			inflater.inflate(R.menu.activity_main_menu, menu);
 			return true;
 		} else if (mPage == PAGE_MAIN_LOGGEDIN) {
-			MenuInflater inflater = getMenuInflater();
+			MenuInflater inflater = getSupportMenuInflater();
 			inflater.inflate(R.menu.activity_loggedin_menu, menu);
 			return true;
 		} else {
@@ -77,9 +78,9 @@ public class MainView extends FragmentActivity {
 		setContentView(R.layout.activity_main_view_login);
 
 		mPage = PAGE_LOGIN;
-		invalidateOptionsMenu();
+		supportInvalidateOptionsMenu();
 
-		final Activity activity = this;
+		final SherlockFragmentActivity activity = this;
 
 		final EditText username = (EditText) findViewById(R.id.login_username_field);
 		final EditText password = (EditText) findViewById(R.id.login_password_field);
@@ -132,7 +133,7 @@ public class MainView extends FragmentActivity {
 			mPage = PAGE_MAIN;
 		}
 
-		invalidateOptionsMenu();
+		supportInvalidateOptionsMenu();
 
 		// Set up the ViewPager with the sections adapter.
 		SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(
@@ -151,7 +152,7 @@ public class MainView extends FragmentActivity {
 			@Override
 			public void onResponse(String result) {
 				mPage = PAGE_MAIN;
-				invalidateOptionsMenu();
+				supportInvalidateOptionsMenu();
 
 				// Set up the ViewPager with the sections adapter.
 				SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(

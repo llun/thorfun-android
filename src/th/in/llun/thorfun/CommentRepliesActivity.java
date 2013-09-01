@@ -10,12 +10,10 @@ import th.in.llun.thorfun.api.model.Comment;
 import th.in.llun.thorfun.api.model.Reply;
 import th.in.llun.thorfun.api.model.ThorfunResult;
 import th.in.llun.thorfun.utils.ImageLoader;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -24,7 +22,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class CommentRepliesActivity extends Activity {
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+
+public class CommentRepliesActivity extends SherlockActivity {
 
 	public static final String KEY_STORY_ID = "story";
 	public static final String KEY_COMMENT = "comment";
@@ -34,7 +36,7 @@ public class CommentRepliesActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_comment_replies_view);
 
-		ActionBar actionBar = getActionBar();
+		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		setTitle(getString(R.string.story_comment_reply_title));
 

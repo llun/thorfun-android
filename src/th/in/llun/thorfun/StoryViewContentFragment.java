@@ -8,14 +8,15 @@ import th.in.llun.thorfun.api.model.CategoryStory;
 import th.in.llun.thorfun.api.model.Story;
 import th.in.llun.thorfun.api.model.ThorfunResult;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
-public class StoryViewContentFragment extends Fragment {
+import com.actionbarsherlock.app.SherlockFragment;
+
+public class StoryViewContentFragment extends SherlockFragment {
 
 	private CategoryStory mStory;
 

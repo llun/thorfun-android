@@ -13,7 +13,6 @@ import th.in.llun.thorfun.utils.ImageLoader;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class BoardFragment extends Fragment {
+import com.actionbarsherlock.app.SherlockFragment;
+
+public class BoardFragment extends SherlockFragment {
 
 	private Thorfun mThorfun;
 	private BoardAdapter mAdapter;

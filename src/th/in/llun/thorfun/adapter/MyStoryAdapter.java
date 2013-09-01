@@ -1,10 +1,12 @@
-package th.in.llun.thorfun;
+package th.in.llun.thorfun.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
+import th.in.llun.thorfun.R;
+import th.in.llun.thorfun.StoryView;
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
 import th.in.llun.thorfun.api.model.RemoteCollection;
@@ -15,14 +17,14 @@ import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class StoryAdapter extends BaseAdapter {
+public class MyStoryAdapter extends BaseAdapter {
 
 	final private List<CategoryStory> mStories = new ArrayList<CategoryStory>(0);
 	private LayoutInflater mInflater = null;
@@ -31,12 +33,15 @@ public class StoryAdapter extends BaseAdapter {
 	private boolean mIsLoading = false;
 	private boolean mIsLastPage = false;
 
-	private String mSortBy = CategoryStory.SORT_HOT;
+	private String mUsername = null;
 
-	public StoryAdapter(Activity activity, LayoutInflater inflater, String sortBy) {
+	public MyStoryAdapter(Activity activity, LayoutInflater inflater) {
 		mActivity = activity;
 		mInflater = inflater;
-		mSortBy = sortBy;
+	}
+
+	public void setUsername(String username) {
+		mUsername = username;
 	}
 
 	public void setStories(List<CategoryStory> stories) {
@@ -79,17 +84,17 @@ public class StoryAdapter extends BaseAdapter {
 				row = (RelativeLayout) mInflater.inflate(R.layout.fragment_loading_row,
 				    parent, false);
 			}
-			
+
 			if (mStories.size() < Thorfun.DEFAULT_PAGE_LIMIT) {
 				mIsLastPage = true;
 			}
-
+			
 			final BaseAdapter self = this;
 
 			if (!mIsLoading && !mIsLastPage) {
 				mIsLoading = true;
 				CategoryStory story = mStories.get(mStories.size() - 1);
-				Thorfun.getInstance(mActivity).loadStory(story, mSortBy,
+				Thorfun.getInstance(mActivity).loadMyStory(story, mUsername,
 				    new ThorfunResult<RemoteCollection<CategoryStory>>() {
 
 					    @Override
