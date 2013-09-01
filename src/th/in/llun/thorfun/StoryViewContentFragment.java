@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -34,6 +35,9 @@ public class StoryViewContentFragment extends SherlockFragment {
 
 			final WebView webView = (WebView) rootView
 			    .findViewById(R.id.story_view_webcontent);
+			WebSettings settings = webView.getSettings();
+			settings.setDefaultTextEncodingName("utf-8");
+
 			Thorfun.getInstance(getActivity()).getStory(mStory.getID(),
 			    new ThorfunResult<Story>() {
 
@@ -47,9 +51,8 @@ public class StoryViewContentFragment extends SherlockFragment {
 					    }
 
 					    content.append(response.getStoryData());
-
-					    webView.loadData(content.toString(), "text/html; charset=UTF-8",
-					        null);
+					    webView.loadDataWithBaseURL(null, content.toString(),
+					        "text/html", "utf-8", null);
 				    }
 			    });
 		} catch (JSONException e) {
@@ -58,5 +61,4 @@ public class StoryViewContentFragment extends SherlockFragment {
 
 		return rootView;
 	}
-
 }
