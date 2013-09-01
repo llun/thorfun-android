@@ -16,7 +16,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 
@@ -40,8 +44,37 @@ public class StoryFragment extends SherlockFragment {
 		    getLayoutInflater(savedInstanceState), mSortBy);
 
 		View rootView = inflater.inflate(R.layout.fragment_story, container, false);
-		GridView grid = (GridView) rootView.findViewById(R.id.story_grid);
+
+		final GridView grid = (GridView) rootView.findViewById(R.id.story_grid);
+		final Button topButton = (Button) rootView
+		    .findViewById(R.id.story_top_button);
+
 		grid.setAdapter(mAdapter);
+		grid.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+			    int visibleItemCount, int totalItemCount) {
+				if (firstVisibleItem > 0) {
+					topButton.setVisibility(View.VISIBLE);
+				} else {
+					topButton.setVisibility(View.GONE);
+				}
+			}
+		});
+		topButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				grid.smoothScrollToPosition(0);
+			}
+		});
 
 		return rootView;
 	}
