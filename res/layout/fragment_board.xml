@@ -14,6 +14,22 @@
         android:verticalSpacing="6dp" >
     </GridView>
 
+    <Button
+        android:id="@+id/story_top_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/list_top_button"
+        android:minHeight="14dp"
+        android:paddingBottom="6dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="6dp"
+        android:text="@string/list_top_button"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/post_field"
         android:layout_width="match_parent"

@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +29,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.AbsListView.OnScrollListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -47,8 +49,38 @@ public class BoardFragment extends SherlockFragment {
 		    getLayoutInflater(savedInstanceState));
 
 		View rootView = inflater.inflate(R.layout.fragment_board, container, false);
-		GridView grid = (GridView) rootView.findViewById(R.id.post_grid);
+		final GridView grid = (GridView) rootView.findViewById(R.id.post_grid);
 		grid.setAdapter(mAdapter);
+		
+		final Button topButton = (Button) rootView
+		    .findViewById(R.id.story_top_button);
+
+		grid.setAdapter(mAdapter);
+		grid.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+			    int visibleItemCount, int totalItemCount) {
+				if (firstVisibleItem > 0) {
+					topButton.setVisibility(View.VISIBLE);
+				} else {
+					topButton.setVisibility(View.GONE);
+				}
+			}
+		});
+		topButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				grid.smoothScrollToPosition(0);
+			}
+		});
 
 		View inputView = rootView.findViewById(R.id.post_field);
 		if (mThorfun.isLoggedIn()) {
