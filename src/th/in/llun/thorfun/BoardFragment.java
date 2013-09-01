@@ -3,6 +3,8 @@ package th.in.llun.thorfun;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import th.in.llun.thorfun.api.Thorfun;
@@ -14,6 +16,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +32,9 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class BoardFragment extends SherlockFragment {
+
+	private static final String KEY_POSTS = "posts";
+	private static final String KEY_POSITION = "position";
 
 	private Thorfun mThorfun;
 	private BoardAdapter mAdapter;
@@ -86,9 +92,48 @@ public class BoardFragment extends SherlockFragment {
 		return rootView;
 	}
 
-	public void onStart() {
-		super.onStart();
+	@Override
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
 
+		if (savedInstanceState != null) {
+			ArrayList<String> rawPosts = savedInstanceState
+			    .getStringArrayList(KEY_POSTS);
+			List<Post> posts = new ArrayList<Post>(rawPosts.size());
+			for (String rawPost : rawPosts) {
+				try {
+					posts.add(new Post(new JSONObject(rawPost)));
+				} catch (JSONException e) {
+					Log.e(Thorfun.LOG_TAG, "Can't parse Post JSON data", e);
+				}
+			}
+			mAdapter.setPosts(posts);
+
+			int position = savedInstanceState.getInt(KEY_POSITION);
+			GridView grid = (GridView) getView().findViewById(R.id.post_grid);
+			grid.scrollTo(0, position);
+		} else {
+			loadPosts();
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		List<Post> posts = mAdapter.getPosts();
+		ArrayList<String> rawPosts = new ArrayList<String>(posts.size());
+		for (Post post : posts) {
+			rawPosts.add(post.rawString());
+		}
+		outState.putStringArrayList(KEY_POSTS, rawPosts);
+
+		GridView grid = (GridView) getView().findViewById(R.id.post_grid);
+		outState.putInt(KEY_POSITION, grid.getScrollY());
+
+	}
+
+	private void loadPosts() {
 		final Activity activity = getActivity();
 		final RelativeLayout layout = (RelativeLayout) activity
 		    .findViewById(R.id.post_loading);
@@ -121,6 +166,10 @@ public class BoardFragment extends SherlockFragment {
 			mPosts.clear();
 			mPosts.addAll(posts);
 			notifyDataSetChanged();
+		}
+
+		public List<Post> getPosts() {
+			return mPosts;
 		}
 
 		@Override
