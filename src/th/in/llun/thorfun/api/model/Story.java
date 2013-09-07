@@ -8,8 +8,12 @@ public class Story extends JSONRemoteObject {
 		super(raw);
 	}
 
-	private JSONObject getStory() {
+	public JSONObject getStory() {
 		return raw.optJSONObject("story");
+	}
+	
+	public CategoryStory getCategoryStory() {
+		return null;
 	}
 
 	public String getStoryDescription() {

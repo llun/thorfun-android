@@ -27,6 +27,17 @@
             </intent-filter>
         </activity>
         <activity android:name="th.in.llun.thorfun.StoryView" >
+            <intent-filter android:label="@string/intent_view_story" >
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="thorfun.com"
+                    android:pathPattern="/.*/story/.*"
+                    android:scheme="http" />
+            </intent-filter>
         </activity>
         <activity android:name="th.in.llun.thorfun.CommentRepliesActivity" >
         </activity>

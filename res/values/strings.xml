@@ -31,5 +31,6 @@
     <string name="browser_share">Share</string>
     <string name="story_comment_reply_title">Replies</string>
     <string name="story_comment_reply_submit">Reply</string>
+    <string name="intent_view_story">View Thorfun Story</string>
 
 </resources>

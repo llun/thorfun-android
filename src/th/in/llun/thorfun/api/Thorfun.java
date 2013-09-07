@@ -191,6 +191,21 @@ public class Thorfun {
 		    });
 	}
 
+	public void getNeightbour(String username,
+	    final ThorfunResult<Neighbour> result) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("username", username);
+
+		jsonInvoke("http://thorfun.com/ajax/neighbour", METHOD_GET, map,
+		    new BaseRemoteResult() {
+
+			    public void onResponse(JSONObject response) {
+				    result.onResponse(new Neighbour(response));
+			    };
+
+		    });
+	}
+
 	public void getStory(String id, final ThorfunResult<Story> result) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("id", id);

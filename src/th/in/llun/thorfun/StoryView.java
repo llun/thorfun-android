@@ -1,5 +1,6 @@
 package th.in.llun.thorfun;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONException;
@@ -9,6 +10,7 @@ import org.ocpsoft.prettytime.PrettyTime;
 import th.in.llun.thorfun.api.DefaultApiResponse;
 import th.in.llun.thorfun.api.Thorfun;
 import th.in.llun.thorfun.api.model.CategoryStory;
+import th.in.llun.thorfun.api.model.Neighbour;
 import th.in.llun.thorfun.api.model.Story;
 import th.in.llun.thorfun.api.model.ThorfunResult;
 import android.content.Intent;
@@ -22,6 +24,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -46,6 +49,8 @@ public class StoryView extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_story_view);
 
+		final View loadingView = (View) findViewById(R.id.story_view_loading);
+
 		mThorfun = Thorfun.getInstance(this);
 
 		ActionBar actionBar = getSupportActionBar();
@@ -54,13 +59,55 @@ public class StoryView extends SherlockFragmentActivity {
 		setTitle(getString(R.string.story_title));
 
 		Intent intent = getIntent();
-		String json = intent.getStringExtra(KEY_STORY);
-		try {
-			mStory = new CategoryStory(new JSONObject(json));
-		} catch (JSONException e) {
-			Log.e(Thorfun.LOG_TAG, "Can't parse JSON string", e);
+
+		final String action = intent.getAction();
+		if (Intent.ACTION_VIEW.equals(action)) {
+			final List<String> segments = intent.getData().getPathSegments();
+
+			final String dataUsername = segments.get(0);
+			final String dataStory = segments.get(2);
+
+			mThorfun.getNeightbour(dataUsername, new ThorfunResult<Neighbour>() {
+
+				@Override
+				public void onResponse(final Neighbour neighbour) {
+
+					mThorfun.getStory(dataStory, new ThorfunResult<Story>() {
+
+						@Override
+						public void onResponse(Story response) {
+							JSONObject object = response.getStory();
+							try {
+								object.put("neighbour", new JSONObject(neighbour.rawString()));
+								mStory = new CategoryStory(object);
+
+								renderDataWithStory();
+								loadingView.setVisibility(View.GONE);
+							} catch (JSONException e) {
+								Log.e(Thorfun.LOG_TAG, "Can't put neighbour", e);
+							}							
+						}
+
+					});
+				}
+			});
+
+		} else {
+			String json = intent.getStringExtra(KEY_STORY);
+			try {
+				mStory = new CategoryStory(new JSONObject(json));
+				loadingView.setVisibility(View.GONE);
+			} catch (JSONException e) {
+				Log.e(Thorfun.LOG_TAG, "Can't parse JSON string", e);
+			}
+
+			renderDataWithStory();
+
 		}
 
+	}
+
+	private void renderDataWithStory() {
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 		    getSupportFragmentManager(), mStory);
 		mViewPager = (ViewPager) findViewById(R.id.pager);
