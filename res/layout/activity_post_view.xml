@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/board_post_profile"
             android:layout_toRightOf="@id/board_post_avatar"
+            android:autoLink="all"
             android:text="@string/loading"
             android:textSize="14sp" />
 

@@ -32,6 +32,8 @@
         </activity>
         <activity android:name="th.in.llun.thorfun.PostActivity" >
         </activity>
+        <activity android:name="th.in.llun.thorfun.ProfileActivity" >
+        </activity>
     </application>
 
 </manifest>
