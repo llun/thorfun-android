@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import th.in.llun.thorfun.api.ApiResponse;
 import th.in.llun.thorfun.api.Thorfun;
+import th.in.llun.thorfun.api.model.CategoryStory;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -101,15 +102,15 @@ public class MainView extends SherlockFragmentActivity {
 							        .getCurrentFocus().getWindowToken(),
 							        InputMethodManager.HIDE_NOT_ALWAYS);
 						    } catch (Exception e) {
-						    	Log.e(Thorfun.LOG_TAG, "Can't hide keybaord", e);
+							    Log.e(Thorfun.LOG_TAG, "Can't hide keybaord", e);
 						    }
-						    View errorMessage = activity.findViewById(R.id.login_error_message);
+						    View errorMessage = activity
+						        .findViewById(R.id.login_error_message);
 						    if (result.equals("false")) {
-						    	errorMessage.setVisibility(View.VISIBLE);
-						    }
-						    else {
-						    	errorMessage.setVisibility(View.GONE);
-						    	showMain();
+							    errorMessage.setVisibility(View.VISIBLE);
+						    } else {
+							    errorMessage.setVisibility(View.GONE);
+							    showMain();
 						    }
 					    }
 
@@ -187,15 +188,30 @@ public class MainView extends SherlockFragmentActivity {
 			Locale l = Locale.getDefault();
 
 			mOptions.clear();
-			MyStoryFragment myStoryFragment = new MyStoryFragment();
-			HashMap<String, Object> myStory = new HashMap<String, Object>();
-			myStory.put(KEY_TITLE, getString(R.string.my_story_title).toUpperCase(l));
-			myStory.put(KEY_FRAGMENT, myStoryFragment);
+			MyStoryFragment myStoriesFragment = new MyStoryFragment();
+			HashMap<String, Object> myStories = new HashMap<String, Object>();
+			myStories.put(KEY_TITLE, getString(R.string.my_story_title)
+			    .toUpperCase(l));
+			myStories.put(KEY_FRAGMENT, myStoriesFragment);
 
-			StoryFragment storyFragment = new StoryFragment();
-			HashMap<String, Object> story = new HashMap<String, Object>();
-			story.put(KEY_TITLE, getString(R.string.story_title).toUpperCase(l));
-			story.put(KEY_FRAGMENT, storyFragment);
+			Bundle topStoriesArgument = new Bundle();
+			topStoriesArgument.putString(StoryFragment.ARGUMENT_SORTBY,
+			    CategoryStory.SORT_HOT);
+			StoryFragment topStoriesFragment = new StoryFragment();
+			topStoriesFragment.setArguments(topStoriesArgument);
+			HashMap<String, Object> topStories = new HashMap<String, Object>();
+			topStories.put(KEY_TITLE, getString(R.string.top_story_title)
+			    .toUpperCase(l));
+			topStories.put(KEY_FRAGMENT, topStoriesFragment);
+
+			Bundle storiesArgument = new Bundle();
+			storiesArgument.putString(StoryFragment.ARGUMENT_SORTBY,
+			    CategoryStory.SORT_TIME);
+			StoryFragment storiesFragment = new StoryFragment();
+			storiesFragment.setArguments(storiesArgument);
+			HashMap<String, Object> stories = new HashMap<String, Object>();
+			stories.put(KEY_TITLE, getString(R.string.story_title).toUpperCase(l));
+			stories.put(KEY_FRAGMENT, storiesFragment);
 
 			BoardFragment boardFragment = new BoardFragment();
 			HashMap<String, Object> board = new HashMap<String, Object>();
@@ -203,9 +219,10 @@ public class MainView extends SherlockFragmentActivity {
 			board.put(KEY_FRAGMENT, boardFragment);
 
 			if (mThorfun.isLoggedIn()) {
-				mOptions.add(myStory);
+				mOptions.add(myStories);
+				mOptions.add(stories);
 			}
-			mOptions.add(story);
+			mOptions.add(topStories);
 			mOptions.add(board);
 		}
 

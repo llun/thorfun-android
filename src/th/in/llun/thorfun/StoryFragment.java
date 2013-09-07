@@ -28,6 +28,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class StoryFragment extends SherlockFragment {
 
+	public static final String ARGUMENT_SORTBY = "sort";
+	
 	private static final String KEY_STORIES = "stories";
 	private static final String KEY_POSITION = "position";
 	private static final String KEY_STATE = "state";
@@ -39,6 +41,8 @@ public class StoryFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
+		mSortBy = getArguments().getString(ARGUMENT_SORTBY);
+		
 		mThorfun = Thorfun.getInstance(getActivity());
 		mAdapter = new StoryAdapter(getActivity(),
 		    getLayoutInflater(savedInstanceState), mSortBy);
@@ -141,11 +145,6 @@ public class StoryFragment extends SherlockFragment {
 		final Activity activity = getActivity();
 		final RelativeLayout layout = (RelativeLayout) activity
 		    .findViewById(R.id.story_loading);
-
-		mSortBy = CategoryStory.SORT_HOT;
-		if (mThorfun.isLoggedIn()) {
-			mSortBy = CategoryStory.SORT_TIME;
-		}
 
 		mThorfun.loadStory(null, mSortBy,
 		    new ThorfunResult<RemoteCollection<CategoryStory>>() {
