@@ -263,6 +263,14 @@ public class Thorfun {
 				    result.onResponse(new RemoteCollection<CategoryStory>(stories));
 			    }
 
+			    public void onResponse(JSONObject response) throws Exception {
+				    throw new Exception("Not support this type of response");
+			    }
+
+			    public void onResponse(String response) throws Exception {
+				    throw new Exception("Not support this type of response");
+			    }
+
 		    });
 
 	}
@@ -453,6 +461,7 @@ public class Thorfun {
 
 			@Override
 			public void onResponse(String output) throws Exception {
+				Log.v(Thorfun.LOG_TAG, "JSON Output: " + output);
 				try {
 					JSONObject json = new JSONObject(output);
 					result.onResponse(json);
@@ -549,10 +558,36 @@ public class Thorfun {
 	private static BasicCookieStore restoreCookieStore(String string) {
 		BasicCookieStore cookieStore = new BasicCookieStore();
 
-		String[] cookies = string.split("$");
+		String[] cookies = string.split("\n");
 		for (String cookie : cookies) {
-			String[] fragments = cookie.split("%");
-			cookieStore.addCookie(new BasicClientCookie(fragments[0], fragments[1]));
+			if (cookie.trim().length() > 0) {
+				String[] fragments = cookie.split("\t");
+
+				String name = new String(Base64.decode(fragments[0], Base64.NO_WRAP));
+				String value = new String(Base64.decode(fragments[1], Base64.NO_WRAP));
+
+				String domain = null;
+				if (!fragments[2].equals("null")) {
+					domain = new String(Base64.decode(fragments[2], Base64.NO_WRAP));
+				}
+
+				String path = null;
+				if (!fragments[3].equals("null")) {
+					path = new String(Base64.decode(fragments[3], Base64.NO_WRAP));
+				}
+
+				Date expiryDate = null;
+				if (!fragments[4].equals("null")) {
+					expiryDate = new Date(Long.parseLong(fragments[4]));
+				}
+
+				BasicClientCookie item = new BasicClientCookie(name, value);
+				item.setDomain(domain);
+				item.setPath(path);
+				item.setExpiryDate(expiryDate);
+				cookieStore.addCookie(item);
+
+			}
 		}
 
 		return cookieStore;
@@ -563,13 +598,29 @@ public class Thorfun {
 		List<Cookie> cookies = cookieStore.getCookies();
 		for (Cookie cookie : cookies) {
 			String name = Base64.encodeToString(cookie.getName().getBytes(),
-			    Base64.DEFAULT);
+			    Base64.NO_WRAP);
 			String value = Base64.encodeToString(cookie.getValue().getBytes(),
-			    Base64.DEFAULT);
-			String cookieString = name + "%" + value;
-			output.append(cookieString + "$");
+			    Base64.NO_WRAP);
+
+			String domain = "null";
+			if (cookie.getDomain() != null) {
+				domain = Base64.encodeToString(cookie.getDomain().getBytes(),
+				    Base64.NO_WRAP);
+			}
+			String path = "null";
+			if (cookie.getPath() != null) {
+				path = Base64.encodeToString(cookie.getPath().getBytes(),
+				    Base64.NO_WRAP);
+			}
+			String expiryDate = "null";
+			if (cookie.getExpiryDate() != null) {
+				expiryDate = Long.toString(cookie.getExpiryDate().getTime());
+			}
+
+			String cookieString = name + "\t" + value + "\t" + domain + "\t" + path
+			    + "\t" + expiryDate;
+			output.append(cookieString + "\n");
 		}
-		output.deleteCharAt(output.length() - 1);
 
 		return output.toString();
 	}
