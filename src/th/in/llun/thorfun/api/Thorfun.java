@@ -35,6 +35,7 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.BasicHttpContext;
@@ -94,6 +95,15 @@ public class Thorfun {
 		HttpParams params = new BasicHttpParams();
 		ConnManagerParams.setMaxTotalConnections(params, 100);
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used.
+		int timeoutConnection = 10000;
+		HttpConnectionParams.setConnectionTimeout(params, timeoutConnection);
+		// Set the default socket timeout (SO_TIMEOUT)
+		// in milliseconds which is the timeout for waiting for data.
+		int timeoutSocket = 30000;
+		HttpConnectionParams.setSoTimeout(params, timeoutSocket);
 
 		// Create and initialize scheme registry
 		SchemeRegistry schemeRegistry = new SchemeRegistry();

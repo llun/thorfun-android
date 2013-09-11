@@ -31,7 +31,8 @@ public class MyStoryFragment extends SherlockFragment {
 		mAdapter = new MyStoryAdapter(getActivity(),
 		    getLayoutInflater(savedInstanceState));
 
-		View rootView = inflater.inflate(R.layout.fragment_my_story, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_my_story, container,
+		    false);
 		GridView grid = (GridView) rootView.findViewById(R.id.my_story_grid);
 		grid.setAdapter(mAdapter);
 
@@ -43,8 +44,8 @@ public class MyStoryFragment extends SherlockFragment {
 		super.onStart();
 
 		final Activity activity = getActivity();
-		final RelativeLayout layout = (RelativeLayout) activity
-		    .findViewById(R.id.my_story_loading);
+		final RelativeLayout layout = (RelativeLayout) getView().findViewById(
+		    R.id.my_story_loading);
 
 		Log.d(Thorfun.LOG_TAG, "Load story");
 		mThorfun.getSelfNeighbour(new ThorfunResult<Neighbour>() {
